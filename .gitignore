@@ -1,3 +1,3 @@
-data/
 *.ipynb
-*.csv
+data/chembl_29_chemreps.txt
+data/chembl_29_selfies.csv
