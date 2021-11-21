@@ -33,8 +33,6 @@ chembl_df.to_csv("./data/chembl_29_selfies.csv", index=False)
 selfies_array = chembl_df.selfies.to_numpy(copy=True)
 selfies_alphabet = sf.get_alphabet_from_selfies(selfies_array)
 
-#
-
 with open("./data/chembl_29_selfies_alphabet.txt", "w") as f:
     f.write(",".join(list(selfies_alphabet)))
 
@@ -45,42 +43,48 @@ selfies_df.sample(frac=1).reset_index(drop=True) # shuffling
 
 #
 
-def white_spaced_selfies(selfie_row): # takes a selfie string and returns it whitespaced. eg. '[C][O][H][H]' -> '[C] [O] [H] [H]'
-    selfies_list = list(sf.split_selfies(selfie_row))
-    return " ".join(i for i in selfies_list)
-
-#
-
 selfies_subset = selfies_df.selfies[:100000]
 selfies_subset = selfies_subset.to_frame()
-
-#
-
-pandarallel.initialize()
-selfies_subset["whitespaced_selfies"] = selfies_subset["selfies"].parallel_apply(white_spaced_selfies)
-
-#
-
 selfies_subset["selfies"].to_csv("./data/selfies_only.txt", index=False)
-selfies_subset["whitespaced_selfies"].to_csv("./data/selfies_only_whitespaced.txt", index=False)
 
 #
 
 from tokenizers import Tokenizer
 from tokenizers.models import BPE
 
-tokenizer = Tokenizer(BPE())
+tokenizer = Tokenizer(BPE(unk_token="[UNK]"))
 
 #
 
-from tokenizers.pre_tokenizers import WhitespaceSplit
+from tokenizers.pre_tokenizers import Split
+from tokenizers import Regex
 
-tokenizer.pre_tokenizer = WhitespaceSplit()
+tokenizer.pre_tokenizer = Split(pattern=Regex("\[|\]"), behavior="removed")
+
+#
+
+from tokenizers.processors import TemplateProcessing
+
+tokenizer.post_processor = TemplateProcessing(
+    single="[CLS] $A [SEP]",
+    pair="[CLS] $A [SEP] $B:1 [SEP]:1",
+    special_tokens=[("[CLS]", 1), ("[SEP]", 2)],
+)
 
 #
 
 from tokenizers.trainers import BpeTrainer
 
-trainer = BpeTrainer()
-tokenizer.train(files=["./data/selfies_only_whitespaced.txt"], trainer=trainer)
-tokenizer.save("./data/bpe.json", pretty=True)
+trainer = BpeTrainer(special_tokens=["[UNK]", "[CLS]", "[SEP]", "[PAD]", "[MASK]"])
+tokenizer.train(files=["./data/selfies_subset.txt"], trainer=trainer)
+
+#
+
+output = tokenizer.encode("[C][=C][C][=C][C][=C][Ring1][=Branch1]")
+print(output.tokens)
+print(output.ids)
+
+#
+
+tokenizer.save("./data/bpe/bpe.json", pretty=True)
+tokenizer.model.save("./data/bpe/")
