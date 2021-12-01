@@ -139,7 +139,6 @@ P@ +1
 Zn +2
 / NH1
 1 8
-= a
 A s
 B H2
 B H1-1
@@ -159,6 +158,5 @@ Mg H2
 Mg +2
 11C H3
 18 F
-=a Branch2
 BH2 -1
 Ca +2

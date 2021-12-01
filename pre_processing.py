@@ -5,7 +5,6 @@ import numpy as np
 
 chembl_df = pd.read_csv("data/chembl_29_chemreps.txt", sep="\t")
 chembl_df.drop(columns=["standard_inchi", "standard_inchi_key"], inplace=True)
-
 chembl_df["selfies"] = chembl_df["canonical_smiles"]
 
 #
@@ -52,7 +51,7 @@ selfies_subset["selfies"].to_csv("./data/selfies_only.txt", index=False)
 from tokenizers import Tokenizer
 from tokenizers.models import BPE
 
-tokenizer = Tokenizer(BPE(unk_token="[UNK]"))
+tokenizer = Tokenizer(BPE(unk_token="<unk>"))
 
 #
 
@@ -66,16 +65,16 @@ tokenizer.pre_tokenizer = Split(pattern=Regex("\[|\]"), behavior="removed")
 from tokenizers.processors import TemplateProcessing
 
 tokenizer.post_processor = TemplateProcessing(
-    single="[CLS] $A [SEP]",
-    pair="[CLS] $A [SEP] $B:1 [SEP]:1",
-    special_tokens=[("[CLS]", 1), ("[SEP]", 2)],
+    single="<s> $A </s>",
+    pair="<s> $A </s> $B:1 </s>:1",
+    special_tokens=[("<s>", 1), ("</s>", 2)],
 )
 
 #
 
 from tokenizers.trainers import BpeTrainer
 
-trainer = BpeTrainer(special_tokens=["[UNK]", "[CLS]", "[SEP]", "[PAD]", "[MASK]"])
+trainer = BpeTrainer(special_tokens=["<unk>", "<s>", "</s>", "<pad>", "<mask>"])
 tokenizer.train(files=["./data/selfies_subset.txt"], trainer=trainer)
 
 #

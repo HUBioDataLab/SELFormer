@@ -1,3 +1,7 @@
 *.ipynb
-data/chembl_29_chemreps.txt
-data/chembl_29_selfies.csv
+__pycache__
+backup
+chembl_29_chemreps.txt
+chembl_29_selfies_alphabet.txt
+chembl_29_selfies.csv
+selfies_subset.txt
