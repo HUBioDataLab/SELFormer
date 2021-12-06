@@ -54,7 +54,7 @@ def train_and_save_roberta_model(selfies_path="./data/selfies_subset.txt", save_
     tokenizer = RobertaTokenizerFast.from_pretrained("./data/bpe/")
 
     train_dataset = CustomDataset(df[0][:100], tokenizer, MAX_LEN) # column name is 0 temp.
-    eval_dataset = CustomDataset(df[0][:100], tokenizer, MAX_LEN)
+    eval_dataset = CustomDataset(df[0][100:200], tokenizer, MAX_LEN)
 
     data_collator = DataCollatorForLanguageModeling(
         tokenizer=tokenizer, mlm=True, mlm_probability=0.15
@@ -82,6 +82,8 @@ def train_and_save_roberta_model(selfies_path="./data/selfies_subset.txt", save_
         eval_dataset=eval_dataset,
         #prediction_loss_only=True,
     )
-
+    
+    print("build trainer with on device:", training_args.device, "with n gpus:", training_args.n_gpu)
+    
     trainer.train()
     trainer.save_model(save_folder)
