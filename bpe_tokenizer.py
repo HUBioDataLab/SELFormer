@@ -12,8 +12,9 @@ def bpe_tokenizer(path="./data/selfies_subset.txt"):
 
     tokenizer = Tokenizer(BPE(unk_token="<unk>"))
 
-    tokenizer.pre_tokenizer = Split(pattern=Regex("\[|\]"), behavior="removed")
-
+    #tokenizer.pre_tokenizer = Split(pattern=Regex("\[|\]"), behavior="removed")
+    tokenizer.pre_tokenizer = Split(pattern=Regex("\[.*?\]"), behavior="isolated")
+    
     tokenizer.post_processor = TemplateProcessing(
         single="<s> $A </s>",
         pair="<s> $A </s> $B:1 </s>:1",
