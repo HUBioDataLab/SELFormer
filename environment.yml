@@ -64,6 +64,8 @@ dependencies:
   - libbrotlienc=1.0.9=h7f98852_6
   - libffi=3.3=he6710b0_2
   - libgcc-ng=11.2.0=h1d223b6_11
+  - libgfortran-ng=7.5.0=ha8ba4b0_17
+  - libgfortran4=7.5.0=ha8ba4b0_17
   - libiconv=1.16=h516909a_0
   - libpng=1.6.37=h21135ba_2
   - libprotobuf=3.16.0=h780b84a_0
@@ -127,12 +129,15 @@ dependencies:
   - reportlab=3.5.68=py38hadf75a6_1
   - requests=2.26.0=pyhd8ed1ab_1
   - sacremoses=0.0.46=pyhd8ed1ab_0
+  - scikit-learn=0.23.2=py38h0573a6f_0
+  - scipy=1.7.1=py38h292c36d_2
   - selfies=2.0.0=pyhd8ed1ab_0
   - setuptools=58.0.4=py38h06a4308_0
   - six=1.16.0=pyhd3eb1b0_0
   - sleef=3.5.1=h9b69904_2
   - sqlalchemy=1.4.27=py38h497a2fe_0
   - sqlite=3.36.0=hc218d9a_0
+  - threadpoolctl=2.1.0=pyh5ca1d4c_0
   - tk=8.6.11=h1ccaba5_0
   - tokenizers=0.10.3=py38hb63a372_1
   - toml=0.10.2=pyhd3eb1b0_0
