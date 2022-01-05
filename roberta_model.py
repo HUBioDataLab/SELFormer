@@ -14,7 +14,6 @@ class CustomDataset(Dataset):
 		return len(self.examples)
 
 	def __getitem__(self, i):
-		# We’ll pad at the batch level.
 		return torch.tensor(self.examples[i])
 
 
@@ -27,21 +26,23 @@ from transformers import RobertaTokenizerFast
 from transformers import DataCollatorForLanguageModeling
 from transformers import Trainer, TrainingArguments
 
+from sklearn.model_selection import train_test_split
 
-def train_and_save_roberta_model(selfies_path="./data/selfies_subset.txt", bpe_path="./data/bpe/", save_folder="./saved_model/"):
-	TRAIN_BATCH_SIZE = 16  # input batch size for training (default: 64)
-	VALID_BATCH_SIZE = 8  # input batch size for testing (default: 1000)
-	TRAIN_EPOCHS = 3  # number of epochs to train (default: 10)
-	LEARNING_RATE = 1e-4  # learning rate (default: 0.001)
-	WEIGHT_DECAY = 0.01
-	MAX_LEN = 128
+
+def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/selfies_subset.txt", bpe_path="./data/bpe/", save_to="./saved_model/"):
+	TRAIN_BATCH_SIZE = hyperparameters_dict["TRAIN_BATCH_SIZE"]
+	VALID_BATCH_SIZE = hyperparameters_dict["VALID_BATCH_SIZE"]
+	TRAIN_EPOCHS = hyperparameters_dict["TRAIN_EPOCHS"]
+	LEARNING_RATE = hyperparameters_dict["LEARNING_RATE"]
+	WEIGHT_DECAY = hyperparameters_dict["WEIGHT_DECAY"]
+	MAX_LEN = hyperparameters_dict["MAX_LEN"]
 
 	config = RobertaConfig(
-		vocab_size=8192, 
-		max_position_embeddings=514, 
-		num_attention_heads=2, 
-		num_hidden_layers=1, 
-		type_vocab_size=1
+		vocab_size=hyperparameters_dict["VOCAB_SIZE"], 
+		max_position_embeddings=hyperparameters_dict["MAX_POSITION_EMBEDDINGS"], 
+		num_attention_heads=hyperparameters_dict["NUM_ATTENTION_HEADS"], 
+		num_hidden_layers=hyperparameters_dict["NUM_HIDDEN_LAYERS"], 
+		type_vocab_size=hyperparameters_dict["TYPE_VOCAB_SIZE"]
 		)
 
 	model = RobertaForMaskedLM(config=config)
@@ -49,13 +50,15 @@ def train_and_save_roberta_model(selfies_path="./data/selfies_subset.txt", bpe_p
 
 	tokenizer = RobertaTokenizerFast.from_pretrained(bpe_path)
 
-	train_dataset = CustomDataset(df[0][:100], tokenizer, MAX_LEN)  # column name is 0 temp.
-	eval_dataset = CustomDataset(df[0][100:200], tokenizer, MAX_LEN)
+	# TODO: Test train_test_split with column_name 0
+	train_df, eval_df = train_test_split(df, test_size=0.2, random_state=42)
+	train_dataset = CustomDataset(train_df, tokenizer, MAX_LEN)  # column name is 0.
+	eval_dataset = CustomDataset(eval_df, tokenizer, MAX_LEN)
 
 	data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=True, mlm_probability=0.15)
 
 	training_args = TrainingArguments(
-		output_dir=save_folder,
+		output_dir=save_to,
 		overwrite_output_dir=True,
 		evaluation_strategy="epoch",
 		num_train_epochs=TRAIN_EPOCHS,
@@ -80,4 +83,4 @@ def train_and_save_roberta_model(selfies_path="./data/selfies_subset.txt", bpe_p
 	print("build trainer with on device:", training_args.device, "with n gpus:", training_args.n_gpu)
 
 	trainer.train()
-	trainer.save_model(save_folder)
+	trainer.save_model(save_to)
