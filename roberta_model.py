@@ -29,7 +29,7 @@ from transformers import Trainer, TrainingArguments
 from sklearn.model_selection import train_test_split
 
 
-def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/selfies_subset.txt", bpe_path="./data/bpe/", save_to="./saved_model/"):
+def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/selfies_subset.txt", robertatokenizer_path="./data/robertatokenizer/", save_to="./saved_model/"):
 	TRAIN_BATCH_SIZE = hyperparameters_dict["TRAIN_BATCH_SIZE"]
 	VALID_BATCH_SIZE = hyperparameters_dict["VALID_BATCH_SIZE"]
 	TRAIN_EPOCHS = hyperparameters_dict["TRAIN_EPOCHS"]
@@ -48,7 +48,7 @@ def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/self
 	model = RobertaForMaskedLM(config=config)
 	df = pd.read_csv(selfies_path, header=None)
 
-	tokenizer = RobertaTokenizerFast.from_pretrained(bpe_path)
+	tokenizer = RobertaTokenizerFast.from_pretrained(robertatokenizer_path)
 
 	# TODO: Test train_test_split with column_name 0
 	train_df, eval_df = train_test_split(df, test_size=0.2, random_state=42)

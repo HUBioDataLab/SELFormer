@@ -29,7 +29,7 @@ import roberta_model
 with open("hyperparameters.yaml") as file:
 	hyperparameters = yaml.safe_load(file)
 	for key in hyperparameters.keys():
-		roberta_model.train_and_save_roberta_model(hyperparameters_dict=hyperparameters[key], selfies_path="./data/selfies_subset.txt", bpe_path="./data/bpe/", save_to="./"+key+"_saved_model/")
+		roberta_model.train_and_save_roberta_model(hyperparameters_dict=hyperparameters[key], selfies_path="./data/selfies_subset.txt", robertatokenizer_path="./data/robertatokenizer/", save_to="./"+key+"_saved_model/")
 
 import test_roberta_model
 test_roberta_model.test_roberta_model(model_folder="./saved_model/", roberta_tokenizer_folder="./data/robertatokenizer/")
