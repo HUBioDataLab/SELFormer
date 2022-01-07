@@ -70,6 +70,7 @@ def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/self
 		save_steps=8192,
 		eval_steps=4096,
 		save_total_limit=1,
+		fp16=True,
 	)
 
 	trainer = Trainer(
