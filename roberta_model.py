@@ -17,16 +17,17 @@ class CustomDataset(Dataset):
 		return torch.tensor(self.examples[i])
 
 
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
 from transformers import RobertaConfig
 from transformers import RobertaForMaskedLM
-
-import pandas as pd
-
 from transformers import RobertaTokenizerFast
+
 from transformers import DataCollatorForLanguageModeling
 from transformers import Trainer, TrainingArguments
 
-from sklearn.model_selection import train_test_split
+import math
 
 
 def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/selfies_subset.txt", robertatokenizer_path="./data/robertatokenizer/", save_to="./saved_model/"):
@@ -52,8 +53,8 @@ def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/self
 
 	# TODO: Test train_test_split with column_name 0
 	train_df, eval_df = train_test_split(df, test_size=0.2, random_state=42)
-	train_dataset = CustomDataset(train_df, tokenizer, MAX_LEN)  # column name is 0.
-	eval_dataset = CustomDataset(eval_df, tokenizer, MAX_LEN)
+	train_dataset = CustomDataset(train_df[0], tokenizer, MAX_LEN)  # column name is 0.
+	eval_dataset = CustomDataset(eval_df[0], tokenizer, MAX_LEN)
 
 	data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=True, mlm_probability=0.15)
 
@@ -77,10 +78,14 @@ def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/self
 		data_collator=data_collator,
 		train_dataset=train_dataset,
 		eval_dataset=eval_dataset,
-		# prediction_loss_only=True,
+		#prediction_loss_only=True,
 	)
 
 	print("build trainer with on device:", training_args.device, "with n gpus:", training_args.n_gpu)
 
 	trainer.train()
+
+	eval_results = trainer.evaluate()
+	print(f">>> Perplexity: {math.exp(eval_results['eval_loss']):.2f}")
+	
 	trainer.save_model(save_to)

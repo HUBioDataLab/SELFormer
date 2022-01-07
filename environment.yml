@@ -49,8 +49,6 @@ dependencies:
   - importlib-metadata=4.8.2=py38h578d9bd_0
   - importlib_metadata=4.8.2=hd8ed1ab_0
   - intel-openmp=2021.4.0=h06a4308_3561
-  - ipykernel=6.5.1=py38he5a9106_0
-  - ipython=7.30.0=py38h578d9bd_0
   - jedi=0.18.1=py38h578d9bd_0
   - joblib=1.1.0=pyhd8ed1ab_0
   - jpeg=9d=h36c2ea0_0
