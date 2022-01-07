@@ -81,7 +81,9 @@ def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/self
 		#prediction_loss_only=True,
 	)
 	
-	torch.device('cuda')
+    	print(torch.cuda.is_available())
+    	torch.cuda_set_device(0)
+    	torch.cuda.current_device()
 	print("build trainer with on device:", training_args.device, "with n gpus:", training_args.n_gpu)
    	#torch.cuda.set_per_process_memory_fraction(0.3) # limit VRAM usage
     	print(torch.cuda.list_gpu_processes())
