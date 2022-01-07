@@ -1,32 +1,21 @@
 from tokenizers import Tokenizer
 from tokenizers.models import BPE
-
 from tokenizers.pre_tokenizers import Split
 from tokenizers import Regex
-
 from tokenizers.processors import TemplateProcessing
-
 from tokenizers.trainers import BpeTrainer
 
-def bpe_tokenizer(path="./data/selfies_subset.txt"):
 
-    tokenizer = Tokenizer(BPE(unk_token="<unk>"))
+def bpe_tokenizer(path="./data/selfies_subset.txt", save_to="./data/bpe/"):
 
-    #tokenizer.pre_tokenizer = Split(pattern=Regex("\[|\]"), behavior="removed")
-    tokenizer.pre_tokenizer = Split(pattern=Regex("\[.*?\]"), behavior="isolated")
-    
-    tokenizer.post_processor = TemplateProcessing(
-        single="<s> $A </s>",
-        pair="<s> $A </s> $B:1 </s>:1",
-        special_tokens=[("<s>", 1), ("</s>", 2)],
-    )
+	tokenizer = Tokenizer(BPE(unk_token="<unk>"))
 
-    trainer = BpeTrainer(special_tokens=["<unk>", "<s>", "</s>", "<pad>", "<mask>"])
-    tokenizer.train(files=[path], trainer=trainer)
+	tokenizer.pre_tokenizer = Split(pattern=Regex("\[|\]"), behavior="removed")
 
-    output = tokenizer.encode("[C][=C][C][=C][C][=C][Ring1][=Branch1]")
-    print(output.tokens)
-    print(output.ids)
+	tokenizer.post_processor = TemplateProcessing(single="<s> $A </s>", pair="<s> $A </s> $B:1 </s>:1", special_tokens=[("<s>", 1), ("</s>", 2)],)
 
-    tokenizer.save("./data/bpe/bpe.json", pretty=True)
-    tokenizer.model.save("./data/bpe/")
+	trainer = BpeTrainer(special_tokens=["<unk>", "<s>", "</s>", "<pad>", "<mask>"])
+	tokenizer.train(files=[path], trainer=trainer)
+
+	tokenizer.save(save_to + "bpe.json", pretty=True)
+	tokenizer.model.save(save_to)

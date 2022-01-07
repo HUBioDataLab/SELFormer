@@ -1,0 +1,15 @@
+default: &default
+    TRAIN_BATCH_SIZE: 16
+    VALID_BATCH_SIZE: 8
+    TRAIN_EPOCHS: 5
+    LEARNING_RATE: 0.0001
+    WEIGHT_DECAY: 0.01
+    MAX_LEN: 128
+    VOCAB_SIZE: 8192
+    MAX_POSITION_EMBEDDINGS: 514
+    NUM_ATTENTION_HEADS: 2
+    NUM_HIDDEN_LAYERS: 1
+    TYPE_VOCAB_SIZE: 1
+default_more_epochs:
+    <<: *default
+    TRAIN_EPOCHS: 10
