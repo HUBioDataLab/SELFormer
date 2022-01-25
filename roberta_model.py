@@ -43,7 +43,8 @@ def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/self
 		max_position_embeddings=hyperparameters_dict["MAX_POSITION_EMBEDDINGS"], 
 		num_attention_heads=hyperparameters_dict["NUM_ATTENTION_HEADS"], 
 		num_hidden_layers=hyperparameters_dict["NUM_HIDDEN_LAYERS"], 
-		type_vocab_size=hyperparameters_dict["TYPE_VOCAB_SIZE"]
+		type_vocab_size=hyperparameters_dict["TYPE_VOCAB_SIZE"],
+		hidden_size=hyperparameters_dict["HIDDEN_SIZE"]
 		)
 
 	model = RobertaForMaskedLM(config=config)
