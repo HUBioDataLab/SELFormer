@@ -51,7 +51,6 @@ def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/self
 
 	tokenizer = RobertaTokenizerFast.from_pretrained(robertatokenizer_path)
 
-	# TODO: Test train_test_split with column_name 0
 	train_df, eval_df = train_test_split(df, test_size=0.2, random_state=42)
 	train_dataset = CustomDataset(train_df[0], tokenizer, MAX_LEN)  # column name is 0.
 	eval_dataset = CustomDataset(eval_df[0], tokenizer, MAX_LEN)
@@ -62,14 +61,16 @@ def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/self
 		output_dir=save_to,
 		overwrite_output_dir=True,
 		evaluation_strategy="epoch",
+		save_strategy="epoch", # saves after each epoch
 		num_train_epochs=TRAIN_EPOCHS,
 		learning_rate=LEARNING_RATE,
 		weight_decay=WEIGHT_DECAY,
 		per_device_train_batch_size=TRAIN_BATCH_SIZE,
 		per_device_eval_batch_size=VALID_BATCH_SIZE,
-		save_steps=8192,
-		eval_steps=4096,
-		save_total_limit=1,
+		# fp16=True,
+		save_total_limit=1, # keeps only 1 checkpoint
+		disable_tqdm=True, # removes progress bars
+		load_best_model_at_end=True, # loads the best model achieved during the training after training is finished.
 	)
 
 	trainer = Trainer(
