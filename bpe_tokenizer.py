@@ -5,8 +5,11 @@ from tokenizers import Regex
 from tokenizers.processors import TemplateProcessing
 from tokenizers.trainers import BpeTrainer
 
+from os import mkdir
+
 
 def bpe_tokenizer(path="./data/selfies_subset.txt", save_to="./data/bpe/"):
+	mkdir(save_to)
 
 	tokenizer = Tokenizer(BPE(unk_token="<unk>"))
 
