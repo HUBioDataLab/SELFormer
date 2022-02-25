@@ -18,7 +18,7 @@ if not isfile("./data/chembl_29_selfies_alphabet.txt"):
 if not isfile("./data/selfies_subset.txt"):
 	print("creating ./data/selfies_subset.txt")
 	import create_subset
-	create_subset.create_selfies_subset(chembl_df, subset_size=100000, save_to="./data/selfies_subset.txt")
+	create_subset.create_selfies_subset(chembl_df, do_subset=False, save_to="./data/selfies_subset.txt")
 print("./data/selfies_subset.txt is available.")
 
 if not isfile("./data/bpe/bpe.json"):
@@ -35,7 +35,6 @@ print("./data/robertatokenizer/ is available.")
 
 import yaml
 import roberta_model
-import test_roberta_model
 with open("hyperparameters.yml") as file:
 	hyperparameters = yaml.safe_load(file)
 	for key in hyperparameters.keys():
@@ -44,5 +43,5 @@ with open("hyperparameters.yml") as file:
 			hyperparameters_dict=hyperparameters[key],
 			selfies_path="./data/selfies_subset.txt",
 			robertatokenizer_path="./data/robertatokenizer/",
-			save_to="./"+key+"_saved_model/")
-		test_roberta_model.test_roberta_model(model_folder="./"+key+"_saved_model/", roberta_tokenizer_folder="./data/robertatokenizer/")
+			save_to="./saved_models/"+key+"_saved_model/")
+		print("finished pre-training with {} parameter set.\n---------------\n".format(key))
