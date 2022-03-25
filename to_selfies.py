@@ -5,4 +5,5 @@ def to_selfies(smiles):  # returns selfies representation of smiles string. if t
     try:
         return sf.encoder(smiles)
     except sf.EncoderError:
+        print("EncoderError in to_selfies()")
         return smiles
