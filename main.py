@@ -4,8 +4,8 @@ try:
 	print("./data/chembl_29_selfies.csv already exists.")
 except FileNotFoundError:
 	print("creating ./data/chembl_29_selfies.csv")
-	import prepare_data
-	prepare_data.prepare_data(path="./data/chembl_29_chemreps.txt", save_to="./data/chembl_29_selfies.csv")
+	import prepare_pretraining_data
+	prepare_pretraining_data.prepare_data(path="./data/chembl_29_chemreps.txt", save_to="./data/chembl_29_selfies.csv")
 	chembl_df = pd.read_csv("./data/chembl_29_selfies.csv")
 print("chembl_29_selfies is read.")
 
