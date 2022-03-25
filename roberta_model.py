@@ -3,7 +3,7 @@ from torch.utils.data.dataset import Dataset
 
 import os
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
-os.environ["CUDA_VISIBLE_DEVICES"] = "5"
+os.environ["CUDA_VISIBLE_DEVICES"] = "6"
 
 class CustomDataset(Dataset):
     def __init__(self, df, tokenizer, MAX_LEN):
