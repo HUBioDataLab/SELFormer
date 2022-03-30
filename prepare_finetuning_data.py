@@ -28,14 +28,14 @@ def smiles_to_selfies(df, out_file):
 def train_val_test_split(path):
     main_df = pd.read_csv(path)
     main_df.sample(frac=1).reset_index(drop=True)  # shuffling
-    main_df.rename(columns={main_df.columns[0]: "smiles"}, inplace=True)
+    main_df.rename(columns={main_df.columns[0]: "smiles", main_df.columns[1]: "target"}, inplace=True)
 
     molecule_list = []
     for _, row in main_df.iterrows():
-        molecule_list.append(chemprop.data.data.MoleculeDatapoint(smiles=[row["smiles"]], targets=row[1:]))
+        molecule_list.append(chemprop.data.data.MoleculeDatapoint(smiles=[row["smiles"]], targets=row["target"]))
     molecule_dataset = chemprop.data.data.MoleculeDataset(molecule_list)
 
-    (train, val, test) = chemprop.data.scaffold.scaffold_split(data=molecule_dataset, sizes=(0.8, 0.1, 0.1), seed=42)
+    (train, val, test) = chemprop.data.scaffold.scaffold_split(data=molecule_dataset, sizes=(0.8, 0.1, 0.1), seed=42, balanced=True)
 
     return (train, val, test)
 
