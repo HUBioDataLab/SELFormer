@@ -1,8 +1,12 @@
 *.ipynb
 *.toml
 __pycache__
+
 backup
+
 saved_model
+saved_models
+
 .vscode
 chembl_29_chemreps.txt
 chembl_29_selfies_alphabet.txt
