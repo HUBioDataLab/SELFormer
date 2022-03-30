@@ -1,7 +1,7 @@
 """
 TO RUN THIS FILE
 
-python train_classification_model.py --dataset=data/finetuning/classification/hiv/hiv.csv --model=data/saved_models/molbert_100epochs_saved_model
+python train_classification_model.py --dataset=data/finetuning/classification/hiv/hiv.csv --model=data/saved_models/molbert_100epochs_saved_model --save_to=molbert_hiv_model
 
 """
 
@@ -54,7 +54,6 @@ class RobertaForSelfiesClassification(BertPreTrainedModel):
         return outputs  # (loss), logits, (hidden_states), (attentions)
 
 
-save_to="./saved_classification_model/"
 model_name = './data/saved_models/molbert_100epochs_saved_model'
 tokenizer_name = './data/robertatokenizer'
 
@@ -99,6 +98,9 @@ parser.add_argument("--model", required=True,
 parser.add_argument('--dataset', required=True,
                     metavar="/path/to/dataset/",
                     help='Directory of the dataset')
+parser.add_argument('--save_to', required=True,
+                    metavar="/path/to/save/to/",
+                    help='Directory to save the model')
 args = parser.parse_args()
 
 
@@ -181,13 +183,13 @@ from transformers import TrainingArguments, Trainer
 
 TRAIN_BATCH_SIZE = 8
 VALID_BATCH_SIZE = 8
-TRAIN_EPOCHS = 5
-LEARNING_RATE = 0.0001
+TRAIN_EPOCHS = 25
+LEARNING_RATE = 1e-5
 WEIGHT_DECAY = 0.1
 MAX_LEN = MAX_LEN
 
 training_args = TrainingArguments(
-    output_dir=save_to,
+    output_dir=args.save_to,
     overwrite_output_dir=True,
     evaluation_strategy="epoch",
     save_strategy="epoch",
@@ -212,7 +214,7 @@ trainer = Trainer(
 metrics = trainer.train()
 print("Metrics")
 print(metrics)
-trainer.save_model(save_to)
+trainer.save_model(args.save_to)
 
 # Testing
 # Make prediction
