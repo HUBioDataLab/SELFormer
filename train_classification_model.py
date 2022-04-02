@@ -1,10 +1,3 @@
-"""
-TO RUN THIS FILE
-
-python train_classification_model.py --dataset=data/finetuning/classification/hiv/hiv.csv --model=data/saved_models/molbert_100epochs_saved_model --save_to=molbert_hiv_model
-
-"""
-
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
@@ -29,6 +22,25 @@ from transformers.models.roberta.modeling_roberta import (
     RobertaModel,
 )
 
+
+# Parse command line arguments
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--model", required=True,
+                    metavar="/path/to/model",
+                    help="Path to model")
+parser.add_argument('--dataset', required=True,
+                    metavar="/path/to/dataset/",
+                    help='Directory of the dataset')
+parser.add_argument('--save_to', required=True,
+                    metavar="/path/to/save/to/",
+                    help='Directory to save the model')
+parser.add_argument('--target_column_id', required=False, default="1",
+                    metavar="<int>", type=int,
+                    help='Column\'s ID in the dataframe')
+args = parser.parse_args()
+
+
 # Model
 class RobertaForSelfiesClassification(BertPreTrainedModel):
     
@@ -50,11 +62,10 @@ class RobertaForSelfiesClassification(BertPreTrainedModel):
             loss_fct = CrossEntropyLoss()
             loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
             outputs = (loss,) + outputs
-
         return outputs  # (loss), logits, (hidden_states), (attentions)
 
 
-model_name = './data/saved_models/molbert_100epochs_saved_model'
+model_name = args.model
 tokenizer_name = './data/robertatokenizer'
 
 
@@ -89,21 +100,6 @@ class MyClassificationDataset(Dataset):
         return item
 
 
-# Parse command line arguments
-import argparse
-parser = argparse.ArgumentParser()
-parser.add_argument("--model", required=True,
-                    metavar="/path/to/model",
-                    help="Path to model")
-parser.add_argument('--dataset', required=True,
-                    metavar="/path/to/dataset/",
-                    help='Directory of the dataset')
-parser.add_argument('--save_to', required=True,
-                    metavar="/path/to/save/to/",
-                    help='Directory to save the model')
-args = parser.parse_args()
-
-
 DATASET_PATH = args.dataset
 SPLIT_DATA_PATH = os.path.join(os.path.dirname(args.dataset), "dataframes")
 
@@ -116,35 +112,34 @@ if not os.path.exists(SPLIT_DATA_PATH):
 from prepare_finetuning_data import smiles_to_selfies
 from prepare_finetuning_data import train_val_test_split
 
-# files = os.listdir(SPLIT_DATA_PATH)
-# # check if the files already exist (csv files for train-validation-test)
-# if "train_df.csv" in files and "validation_df.csv" in files and "test_df.csv" in files:
-#     train_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "train_df.csv"), sep=",")
-#     validation_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "validation_df.csv"), sep=",")
-#     test_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "test_df.csv"), sep=",")
-#     test_y = pd.DataFrame(test_df.target, columns = ['target'])
-# else:
-#     # split data
+files = os.listdir(SPLIT_DATA_PATH)
+# check if the files already exist (csv files for train-validation-test)
+if "train_df.csv" in files and "validation_df.csv" in files and "test_df.csv" in files:
+    train_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "train_df.csv"), sep=",")
+    validation_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "validation_df.csv"), sep=",")
+    test_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "test_df.csv"), sep=",")
+    test_y = pd.DataFrame(test_df.target, columns = ['target'])
+else:
+    # split data
+    (train, val, test) = train_val_test_split(DATASET_PATH, args.target_column_id)
 
-(train, val, test) = train_val_test_split(DATASET_PATH)
+    train_smiles = [item[0] for item in train.smiles()]
+    validation_smiles = [item[0] for item in val.smiles()]
+    test_smiles = [item[0] for item in test.smiles()]
 
-train_smiles = [item[0] for item in train.smiles()]
-validation_smiles = [item[0] for item in val.smiles()]
-test_smiles = [item[0] for item in test.smiles()]
+    train_df = pd.DataFrame(np.column_stack([train_smiles, train.targets()]), columns = ['smiles', 'target'])
+    validation_df = pd.DataFrame(np.column_stack([validation_smiles, val.targets()]), columns = ['smiles', 'target'])
+    test_df = pd.DataFrame(np.column_stack([test_smiles, test.targets()]), columns = ['smiles', 'target'])
 
-train_df = pd.DataFrame(np.column_stack([train_smiles, train.targets()]), columns = ['smiles', 'target'])
-validation_df = pd.DataFrame(np.column_stack([validation_smiles, val.targets()]), columns = ['smiles', 'target'])
-test_df = pd.DataFrame(np.column_stack([test_smiles, test.targets()]), columns = ['smiles', 'target'])
+    # convert dataframes to SELFIES representation
+    smiles_to_selfies(train_df, os.path.join(SPLIT_DATA_PATH,"train_df.csv"))
+    smiles_to_selfies(validation_df, os.path.join(SPLIT_DATA_PATH,"validation_df.csv"))
+    smiles_to_selfies(test_df, os.path.join(SPLIT_DATA_PATH,"test_df.csv"))
 
-# convert dataframes to SELFIES representation
-smiles_to_selfies(train_df, os.path.join(SPLIT_DATA_PATH,"train_df.csv"))
-smiles_to_selfies(validation_df, os.path.join(SPLIT_DATA_PATH,"validation_df.csv"))
-smiles_to_selfies(test_df, os.path.join(SPLIT_DATA_PATH,"test_df.csv"))
-
-train_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "train_df.csv"), sep=",")
-validation_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "validation_df.csv"), sep=",")
-test_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "test_df.csv"), sep=",")
-test_y = pd.DataFrame(test_df.target, columns = ['target'])
+    train_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "train_df.csv"), sep=",")
+    validation_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "validation_df.csv"), sep=",")
+    test_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "test_df.csv"), sep=",")
+    test_y = pd.DataFrame(test_df.target, columns = ['target'])
 
 MAX_LEN = 128 
 train_examples = (train_df.iloc[:, 0].astype(str).tolist(), train_df.iloc[:, 1].tolist())
@@ -163,9 +158,6 @@ precision = load_metric('precision')
 recall = load_metric('recall')
 f1 = load_metric('f1')
 
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import precision_recall_curve
-from sklearn.metrics import auc
 def compute_metrics(eval_pred):
     predictions, labels = eval_pred
     predictions = np.argmax(predictions, axis=1)
@@ -179,6 +171,7 @@ def compute_metrics(eval_pred):
     return result
 
 
+# Train and Evaluate
 from transformers import TrainingArguments, Trainer
 
 TRAIN_BATCH_SIZE = 8
@@ -223,10 +216,16 @@ raw_pred, label_ids, metrics = trainer.predict(test_dataset)
 # Preprocess raw predictions
 y_pred = np.argmax(raw_pred, axis=1)
 
+
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import auc
+
 roc_auc_score_result = roc_auc_score(y_true = test_y, y_score= y_pred) 
 # calculate precision-recall curve
 precision_from_curve, recall_from_curve, thresholds_from_curve = precision_recall_curve(test_y, y_pred)
 # calculate precision-recall AUC
 auc_score = auc(recall_from_curve, precision_from_curve)
-print(metrics)
+
+
 print("\nROC-AUC: ",roc_auc_score_result,"\nPRC-AUC: ", auc_score)#, precision_from_curve, recall_from_curve)
