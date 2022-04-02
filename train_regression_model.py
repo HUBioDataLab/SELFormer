@@ -229,7 +229,7 @@ trainer.save_model(args.save_to)
 raw_pred, label_ids, metrics = trainer.predict(test_dataset)
 
 # Preprocess raw predictions
-y_pred = np.argmax(raw_pred, axis=1)
+y_pred = [i[0] for i in raw_pred]
 
 MSE = mean_squared_error(y_true=test_y, y_pred=y_pred, squared=True) # it is actually squared=True, https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html
 RMSE = mean_squared_error(y_true=test_y, y_pred=y_pred, squared=False) # it needs to squared=False, check the link above
