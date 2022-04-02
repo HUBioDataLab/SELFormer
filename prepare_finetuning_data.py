@@ -25,10 +25,13 @@ def smiles_to_selfies(df, out_file):
     # return df
 
 
-def train_val_test_split(path):
+def train_val_test_split(path, target_column_number=1):
     main_df = pd.read_csv(path)
     main_df.sample(frac=1).reset_index(drop=True)  # shuffling
-    main_df.rename(columns={main_df.columns[0]: "smiles", main_df.columns[1]: "target"}, inplace=True)
+    main_df.rename(columns={main_df.columns[0]: "smiles", main_df.columns[target_column_number]: "target"}, inplace=True)
+
+    main_df.dropna(subset=["target"], inplace=True)
+    main_df.reset_index(drop=True, inplace=True)
 
     molecule_list = []
     for _, row in main_df.iterrows():
