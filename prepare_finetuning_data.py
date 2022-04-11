@@ -4,26 +4,33 @@ import chemprop
 from pandarallel import pandarallel
 import to_selfies
 
-# def fix_esol(path):
-#     main_df = pd.read_csv(path)
-#     main_df.insert(0, "smiles", main_df.pop("smiles"))
-#     main_df.to_csv(path, index=False)
-# fix_esol("data/finetuning/regression/esol/esol.csv")
-
 def smiles_to_selfies(df, out_file):
-	df["selfies"] = df["smiles"]
-	pandarallel.initialize()
-	df.selfies = df.selfies.parallel_apply(to_selfies.to_selfies)
+    df.insert(0, "selfies", df["smiles"])
+    pandarallel.initialize()
+    df.selfies = df.selfies.parallel_apply(to_selfies.to_selfies)
 
-	df.drop(df[df.smiles == df.selfies].index, inplace=True)
-	df.drop(columns=["smiles"], inplace=True)
-	df = df[["selfies", "target"]]
-	df.to_csv(out_file, index=False)
+    df.drop(df[df.smiles == df.selfies].index, inplace=True)
+    df.drop(columns=["smiles"], inplace=True)
+    df.to_csv(out_file, index=False)
 
-	print(".csv file saved to: " + out_file)
+    print(".csv file saved to: " + out_file)
 
     # return df
 
+def train_val_test_split_multilabel(path):
+    main_df = pd.read_csv(path)
+    main_df.sample(frac=1).reset_index(drop=True)  # shuffling
+    main_df.rename(columns={main_df.columns[0]: "smiles"}, inplace=True)
+    main_df.reset_index(drop=True, inplace=True)
+
+    molecule_list = []
+    for _, row in main_df.iterrows():
+        molecule_list.append(chemprop.data.data.MoleculeDatapoint(smiles=[row["smiles"]], targets=row[1:].values))
+    molecule_dataset = chemprop.data.data.MoleculeDataset(molecule_list)
+
+    (train, val, test) = chemprop.data.scaffold.scaffold_split(data=molecule_dataset, sizes=(0.8, 0.1, 0.1), seed=42, balanced=True)
+
+    return (train, val, test)
 
 def train_val_test_split(path, target_column_number=1):
     main_df = pd.read_csv(path)
