@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "6"
 
 import numpy as np
 import pandas as pd
@@ -174,16 +174,16 @@ test_dataset = MyClassificationDataset(test_examples,tokenizer, MAX_LEN)
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.metrics import mean_absolute_error
 
-# def compute_metrics(eval_pred):
-#     predictions, labels = eval_pred
-#     predictions = np.argmax(predictions, axis=1)
+def compute_metrics(eval_pred):
+    preds, labels = eval_pred
+    predictions = [i[0] for i in preds]
 
-#     mse = mean_squared_error(y_pred=predictions, y_true=labels, squared=True) # it is actually squared=True, https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html
-#     rmse = mean_squared_error(y_pred=predictions, y_true=labels, squared=False) # it needs to squared=False, check the link above
-#     mae = mean_absolute_error(y_pred=predictions, y_true=labels)
+    mse = {"mse": mean_squared_error(y_pred=predictions, y_true=labels, squared=True)} # it is actually squared=True, https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html
+    rmse = {"rmse": mean_squared_error(y_pred=predictions, y_true=labels, squared=False)} # it needs to squared=False, check the link above
+    mae = {"mae": mean_absolute_error(y_pred=predictions, y_true=labels)}
 
-#     result = {mse, rmse, mae}
-#     return result
+    result = {**mse, **rmse, **mae}
+    return result
 
 
 # Train and Evaluate
@@ -191,7 +191,7 @@ from transformers import TrainingArguments, Trainer
 
 TRAIN_BATCH_SIZE = 8
 VALID_BATCH_SIZE = 8
-TRAIN_EPOCHS = 25
+TRAIN_EPOCHS = 50
 LEARNING_RATE = 1e-5
 WEIGHT_DECAY = 0.1
 MAX_LEN = MAX_LEN
@@ -206,9 +206,11 @@ training_args = TrainingArguments(
     weight_decay=WEIGHT_DECAY,
     per_device_train_batch_size=TRAIN_BATCH_SIZE,
     per_device_eval_batch_size=VALID_BATCH_SIZE,
-    save_total_limit=1,
     disable_tqdm=True,
-    # fp16=True
+#     load_best_model_at_end=True,
+#     metric_for_best_model="roc-auc",
+#     greater_is_better=True,
+    save_total_limit=1,
 )
 
 trainer = Trainer(
@@ -216,7 +218,7 @@ trainer = Trainer(
     args=training_args,                  # training arguments, defined above
     train_dataset=train_dataset,         # training dataset
     eval_dataset=validation_dataset,     # evaluation dataset
-    # compute_metrics=compute_metrics,
+    compute_metrics=compute_metrics,
 )
 
 metrics = trainer.train()

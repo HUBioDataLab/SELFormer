@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 
 import numpy as np
 import pandas as pd
@@ -152,6 +152,10 @@ test_examples = (test_df.iloc[:, 0].astype(str).tolist(), test_df.iloc[:, 1].tol
 test_dataset = MyClassificationDataset(test_examples, tokenizer, MAX_LEN)
 
 
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import auc
+
 from datasets import load_metric
 acc = load_metric('accuracy')
 precision = load_metric('precision')
@@ -166,8 +170,11 @@ def compute_metrics(eval_pred):
     precision_result = precision.compute(predictions=predictions, references=labels)
     recall_result = recall.compute(predictions=predictions, references=labels)
     f1_result = f1.compute(predictions=predictions, references=labels)
+    roc_auc_result = {"roc-auc": roc_auc_score(y_true = labels, y_score= predictions)}
+    precision_from_curve, recall_from_curve, thresholds_from_curve = precision_recall_curve(labels, predictions)
+    prc_auc_result = {"prc-auc": auc(recall_from_curve, precision_from_curve)}
 
-    result = {**acc_result, **precision_result, **recall_result, **f1_result}
+    result = {**acc_result, **precision_result, **recall_result, **f1_result, **roc_auc_result, **prc_auc_result}
     return result
 
 
@@ -176,7 +183,7 @@ from transformers import TrainingArguments, Trainer
 
 TRAIN_BATCH_SIZE = 8
 VALID_BATCH_SIZE = 8
-TRAIN_EPOCHS = 25
+TRAIN_EPOCHS = 50
 LEARNING_RATE = 1e-5
 WEIGHT_DECAY = 0.1
 MAX_LEN = MAX_LEN
@@ -191,9 +198,11 @@ training_args = TrainingArguments(
     weight_decay=WEIGHT_DECAY,
     per_device_train_batch_size=TRAIN_BATCH_SIZE,
     per_device_eval_batch_size=VALID_BATCH_SIZE,
-    save_total_limit=1,
     disable_tqdm=True,
-    # fp16=True
+#     load_best_model_at_end=True,
+#     metric_for_best_model="roc-auc",
+#     greater_is_better=True,
+    save_total_limit=1,
 )
 
 trainer = Trainer(
@@ -216,16 +225,11 @@ raw_pred, label_ids, metrics = trainer.predict(test_dataset)
 # Preprocess raw predictions
 y_pred = np.argmax(raw_pred, axis=1)
 
-
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import precision_recall_curve
-from sklearn.metrics import auc
-
+# ROC-AUC
 roc_auc_score_result = roc_auc_score(y_true = test_y, y_score= y_pred) 
-# calculate precision-recall curve
+# PRC-AUC
 precision_from_curve, recall_from_curve, thresholds_from_curve = precision_recall_curve(test_y, y_pred)
-# calculate precision-recall AUC
-auc_score = auc(recall_from_curve, precision_from_curve)
+auc_score_result = auc(recall_from_curve, precision_from_curve)
 
 
-print("\nROC-AUC: ",roc_auc_score_result,"\nPRC-AUC: ", auc_score)#, precision_from_curve, recall_from_curve)
+print("\nROC-AUC: ", roc_auc_score_result, "\nPRC-AUC: ", auc_score_result)
