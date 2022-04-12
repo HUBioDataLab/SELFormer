@@ -1,5 +1,7 @@
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "6"
+os.environ["TOKENIZER_PARALLELISM"] = "false"
+os.environ["WANDB_DISABLED"] = "true"
 
 import numpy as np
 import pandas as pd
@@ -38,7 +40,10 @@ parser.add_argument('--target_column_id', required=False, default="1",
                     help='Column\'s ID in the dataframe')
 parser.add_argument('--scaler', required=False, default=0,
                     metavar="<int>", type=int,
-                    help='0 for no scaling, 1 for min-max scaling, 2 for standard scaling')
+                    help='0 for no scaling, 1 for min-max scaling, 2 for standard scaling. Default: 0')
+parser.add_argument('--use_scaffold', required=False,
+                    metavar="<int>", type=int, default=0,
+                    help='Split to use. 0 for random, 1 for scaffold. Default: 0')
 args = parser.parse_args()
 
 
@@ -65,7 +70,6 @@ class RobertaForSelfiesClassification(BertPreTrainedModel):
                 loss = loss_fct(logits.squeeze(), labels.squeeze())
                 outputs = (loss,) + outputs
         return outputs  # (loss), logits, (hidden_states), (attentions)
-
 
 model_name = args.model
 tokenizer_name = './data/robertatokenizer'
@@ -102,27 +106,14 @@ class MyClassificationDataset(Dataset):
         return item
 
 DATASET_PATH = args.dataset
-SPLIT_DATA_PATH = os.path.join(os.path.dirname(args.dataset), "dataframes")
-
-# check if the directory for dataframes already exist
-if not os.path.exists(SPLIT_DATA_PATH):
-    # create a new directory
-    os.makedirs(SPLIT_DATA_PATH)
-
-
 from prepare_finetuning_data import smiles_to_selfies
 from prepare_finetuning_data import train_val_test_split
 
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-
-files = os.listdir(SPLIT_DATA_PATH)
-# check if the files already exist (csv files for train-validation-test)
-if "train_df.csv" in files and "validation_df.csv" in files and "test_df.csv" in files:
-    train_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "train_df.csv"), sep=",")
-    validation_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "validation_df.csv"), sep=",")
-    test_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "test_df.csv"), sep=",")
-else:
-    # split data
+if args.use_scaffold == 0: # random
+    print("Using random split")
+    (train_df, validation_df, test_df) = train_val_test_split(DATASET_PATH, args.target_column_id, scaffold_split=False)
+else: # scaffold
+    print("Using scaffold split")
     (train, val, test) = train_val_test_split(DATASET_PATH, args.target_column_id)
 
     train_smiles = [item[0] for item in train.smiles()]
@@ -133,16 +124,11 @@ else:
     validation_df = pd.DataFrame(np.column_stack([validation_smiles, val.targets()]), columns = ['smiles', 'target'])
     test_df = pd.DataFrame(np.column_stack([test_smiles, test.targets()]), columns = ['smiles', 'target'])
 
-    # convert dataframes to SELFIES representation
-    smiles_to_selfies(train_df, os.path.join(SPLIT_DATA_PATH,"train_df.csv"))
-    smiles_to_selfies(validation_df, os.path.join(SPLIT_DATA_PATH,"validation_df.csv"))
-    smiles_to_selfies(test_df, os.path.join(SPLIT_DATA_PATH,"test_df.csv"))
+train_df = smiles_to_selfies(train_df)
+validation_df = smiles_to_selfies(validation_df)
+test_df = smiles_to_selfies(test_df)
 
-    train_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "train_df.csv"), sep=",")
-    validation_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "validation_df.csv"), sep=",")
-    test_df = pd.read_csv(os.path.join(SPLIT_DATA_PATH, "test_df.csv"), sep=",")
-
-# scale data
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 if args.scaler == 0:
     print("Not using a scaler.")
 elif args.scaler == 1:

@@ -1,14 +1,12 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "5"
+os.environ["CUDA_VISIBLE_DEVICES"] = "6"
+os.environ["TOKENIZER_PARALLELISM"] = "false"
+os.environ["WANDB_DISABLED"] = "true"
 
 from simpletransformers.classification import MultiLabelClassificationModel
 
 import pandas as pd
 import numpy as np
-import chemprop
-
-from pandarallel import pandarallel
-import to_selfies
 
 import argparse
 parser = argparse.ArgumentParser()
@@ -21,40 +19,44 @@ parser.add_argument('--dataset', required=True,
 parser.add_argument('--save_to', required=True,
                     metavar="/path/to/save/to/",
                     help='Directory to save the model')
+parser.add_argument('--use_scaffold', required=False,
+                    metavar="<int>", type=int, default=0,
+                    help='Split to use. 0 for random, 1 for scaffold. Default: 0')
 args = parser.parse_args()
 
 
 num_labels = len(pd.read_csv(args.dataset).columns)-1
 model_args = {
-    "num_train_epochs": 25,
+    "num_train_epochs": 50,
     "learning_rate": 1e-5,
     "weight_decay": 0.1,
+    "train_batch_size": 8,
 
     "output_dir": args.save_to,
 }
 model = MultiLabelClassificationModel("roberta", args.model, num_labels=num_labels, use_cuda=True, args=model_args)
 
 from prepare_finetuning_data import train_val_test_split_multilabel
-(train, val, test) = train_val_test_split_multilabel(args.dataset)
+if args.use_scaffold == 0: # random split
+    print("Using random split")
+    (train_df, eval_df, test_df) = train_val_test_split_multilabel(args.dataset, scaffold_split=False)
 
-train_smiles = [item[0] for item in train.smiles()]
-validation_smiles = [item[0] for item in val.smiles()]
-test_smiles = [item[0] for item in test.smiles()]
+    train_df.columns = ["smiles"] + ["Feature_" + str(i) for i in range(num_labels)]
+    eval_df.columns = ["smiles"] + ["Feature_" + str(i) for i in range(num_labels)]
+    test_df.columns = ["smiles"] + ["Feature_" + str(i) for i in range(num_labels)]
+else: # scaffold split
+    print("Using scaffold split")
+    (train, val, test) = train_val_test_split_multilabel(args.dataset, scaffold_split=True)
 
-train_df = pd.DataFrame(np.column_stack([train_smiles, train.targets()]), columns = ['smiles'] + ["Feature_" + str(i) for i in range(len(train.targets()[0]))])
-eval_df = pd.DataFrame(np.column_stack([validation_smiles, val.targets()]), columns = ['smiles'] + ["Feature_" + str(i) for i in range(len(val.targets()[0]))])
-test_df = pd.DataFrame(np.column_stack([test_smiles, test.targets()]), columns = ['smiles'] + ["Feature_" + str(i) for i in range(len(test.targets()[0]))])
+    train_smiles = [item[0] for item in train.smiles()]
+    validation_smiles = [item[0] for item in val.smiles()]
+    test_smiles = [item[0] for item in test.smiles()]
 
-def smiles_to_selfies(df):
-    df.insert(0, "selfies", df["smiles"])
-    pandarallel.initialize()
-    df.selfies = df.selfies.parallel_apply(to_selfies.to_selfies)
+    train_df = pd.DataFrame(np.column_stack([train_smiles, train.targets()]), columns = ['smiles'] + ["Feature_" + str(i) for i in range(len(train.targets()[0]))])
+    eval_df = pd.DataFrame(np.column_stack([validation_smiles, val.targets()]), columns = ['smiles'] + ["Feature_" + str(i) for i in range(len(val.targets()[0]))])
+    test_df = pd.DataFrame(np.column_stack([test_smiles, test.targets()]), columns = ['smiles'] + ["Feature_" + str(i) for i in range(len(test.targets()[0]))])
 
-    df.drop(df[df.smiles == df.selfies].index, inplace=True)
-    df.drop(columns=["smiles"], inplace=True)
-
-    return df
-
+from prepare_finetuning_data import smiles_to_selfies
 train_df = smiles_to_selfies(train_df)
 eval_df = smiles_to_selfies(eval_df)
 test_df = smiles_to_selfies(test_df)
