@@ -31,6 +31,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--model", required=True,
                     metavar="/path/to/model",
                     help="Path to model")
+parser.add_argument('--tokenizer', required=True,
+                    metavar="/path/to/tokenizer/",
+                    help='Directory of the tokenizer')
 parser.add_argument('--dataset', required=True,
                     metavar="/path/to/dataset/",
                     help='Directory of the dataset')
@@ -43,14 +46,29 @@ parser.add_argument('--target_column_id', required=False, default="1",
 parser.add_argument('--use_scaffold', required=False,
                     metavar="<int>", type=int, default=0,
                     help='Split to use. 0 for random, 1 for scaffold. Default: 0',)
+parser.add_argument('--train_batch_size', required=False,
+                    metavar="<int>", type=int, default=8,
+                    help='Batch size for training. Default: 8')
+parser.add_argument('--validation_batch_size', required=False,
+                    metavar="<int>", type=int, default=8,
+                    help='Batch size for validation. Default: 8')
+parser.add_argument('--num_epochs', required=False,
+                    metavar="<int>", type=int, default=50,
+                    help='Number of epochs. Default: 50')
+parser.add_argument('--lr', required=False,
+                    metavar="<float>", type=float, default=1e-5,
+                    help='Learning rate. Default: 1e-5')
+parser.add_argument('--wd', required=False,
+                    metavar="<float>", type=float, default=0.1,
+                    help='Weight decay. Default: 0.1')
 args = parser.parse_args()
 
 
 # Model
-class RobertaForSelfiesClassification(BertPreTrainedModel):
+class SELFIESTransformers_For_Classification(BertPreTrainedModel):
     
     def __init__(self, config):
-        super(RobertaForSelfiesClassification, self).__init__(config)
+        super(SELFIESTransformers_For_Classification, self).__init__(config)
         self.num_labels = config.num_labels
         self.roberta = RobertaModel(config)
         self.classifier = RobertaClassificationHead(config)
@@ -71,7 +89,7 @@ class RobertaForSelfiesClassification(BertPreTrainedModel):
 
 
 model_name = args.model
-tokenizer_name = './data/robertatokenizer'
+tokenizer_name = args.tokenizer
 
 
 # Configs
@@ -79,7 +97,7 @@ num_labels = 2
 config_class = RobertaConfig
 config = config_class.from_pretrained(model_name, num_labels=num_labels)
 
-model_class = RobertaForSelfiesClassification
+model_class = SELFIESTransformers_For_Classification
 model = model_class.from_pretrained(model_name, config=config)
 
 tokenizer_class = RobertaTokenizerFast
@@ -87,7 +105,7 @@ tokenizer = tokenizer_class.from_pretrained(tokenizer_name, do_lower_case=False)
 
 
 # Prepare and Get Data
-class MyClassificationDataset(Dataset):
+class SELFIESTransfomers_Dataset(Dataset):
     
     def __init__(self, data, tokenizer, MAX_LEN):
         text, labels = data
@@ -131,13 +149,13 @@ test_y = pd.DataFrame(test_df.target, columns = ['target'])
 
 MAX_LEN = 128 
 train_examples = (train_df.iloc[:, 0].astype(str).tolist(), train_df.iloc[:, 1].tolist())
-train_dataset = MyClassificationDataset(train_examples, tokenizer, MAX_LEN)
+train_dataset = SELFIESTransfomers_Dataset(train_examples, tokenizer, MAX_LEN)
 
 validation_examples = (validation_df.iloc[:, 0].astype(str).tolist(), validation_df.iloc[:, 1].tolist())
-validation_dataset = MyClassificationDataset(validation_examples, tokenizer, MAX_LEN)
+validation_dataset = SELFIESTransfomers_Dataset(validation_examples, tokenizer, MAX_LEN)
 
 test_examples = (test_df.iloc[:, 0].astype(str).tolist(), test_df.iloc[:, 1].tolist())
-test_dataset = MyClassificationDataset(test_examples, tokenizer, MAX_LEN)
+test_dataset = SELFIESTransfomers_Dataset(test_examples, tokenizer, MAX_LEN)
 
 
 from sklearn.metrics import roc_auc_score
@@ -168,11 +186,11 @@ def compute_metrics(eval_pred):
 # Train and Evaluate
 from transformers import TrainingArguments, Trainer
 
-TRAIN_BATCH_SIZE = 8
-VALID_BATCH_SIZE = 8
-TRAIN_EPOCHS = 50
-LEARNING_RATE = 1e-5
-WEIGHT_DECAY = 0.1
+TRAIN_BATCH_SIZE = args.train_batch_size
+VALID_BATCH_SIZE = args.validation_batch_size
+TRAIN_EPOCHS = args.num_epochs
+LEARNING_RATE = args.lr
+WEIGHT_DECAY = args.wd
 MAX_LEN = MAX_LEN
 
 training_args = TrainingArguments(

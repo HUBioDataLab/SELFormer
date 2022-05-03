@@ -22,18 +22,31 @@ parser.add_argument('--save_to', required=True,
 parser.add_argument('--use_scaffold', required=False,
                     metavar="<int>", type=int, default=0,
                     help='Split to use. 0 for random, 1 for scaffold. Default: 0')
+parser.add_argument('--num_epochs', required=False,
+                    metavar="<int>", type=int, default=50,
+                    help='Number of epochs. Default: 50')
+parser.add_argument('--lr', required=False,
+                    metavar="<float>", type=float, default=1e-5,
+                    help='Learning rate. Default: 1e-5')
+parser.add_argument('--wd', required=False,
+                    metavar="<float>", type=float, default=0.1,
+                    help='Weight decay. Default: 0.1')
+parser.add_argument('--batch_size', required=False,
+                    metavar="<int>", type=int, default=8,
+                    help='Batch size. Default: 8')
 args = parser.parse_args()
 
 
 num_labels = len(pd.read_csv(args.dataset).columns)-1
 model_args = {
-    "num_train_epochs": 50,
-    "learning_rate": 1e-5,
-    "weight_decay": 0.1,
-    "train_batch_size": 8,
+    "num_train_epochs": args.num_epochs,
+    "learning_rate": args.lr,
+    "weight_decay": args.wd,
+    "train_batch_size": args.batch_size,
 
     "output_dir": args.save_to,
 }
+
 model = MultiLabelClassificationModel("roberta", args.model, num_labels=num_labels, use_cuda=True, args=model_args)
 
 from prepare_finetuning_data import train_val_test_split_multilabel
