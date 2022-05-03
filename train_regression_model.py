@@ -43,7 +43,7 @@ parser.add_argument('--target_column_id', required=False, default="1",
                     help='Column\'s ID in the dataframe')
 parser.add_argument('--scaler', required=False, default=0,
                     metavar="<int>", type=int,
-                    help='0 for no scaling, 1 for min-max scaling, 2 for standard scaling. Default: 0')
+                    help='Scaler to use for regression. 0 for no scaling, 1 for min-max scaling, 2 for standard scaling. Default: 0')
 parser.add_argument('--use_scaffold', required=False,
                     metavar="<int>", type=int, default=0,
                     help='Split to use. 0 for random, 1 for scaffold. Default: 0')

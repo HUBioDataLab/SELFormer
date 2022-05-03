@@ -30,13 +30,13 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", required=True,
                     metavar="/path/to/model",
-                    help="Path to model")
+                    help="Directory of the pre-trained model")
 parser.add_argument('--tokenizer', required=True,
                     metavar="/path/to/tokenizer/",
-                    help='Directory of the tokenizer')
+                    help='Directory of the RobertaFastTokenizer')
 parser.add_argument('--dataset', required=True,
                     metavar="/path/to/dataset/",
-                    help='Directory of the dataset')
+                    help='Path of the fine-tuning dataset')
 parser.add_argument('--save_to', required=True,
                     metavar="/path/to/save/to/",
                     help='Directory to save the model')
