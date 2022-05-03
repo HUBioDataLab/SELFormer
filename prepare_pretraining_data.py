@@ -16,4 +16,13 @@ def prepare_data(path="data/chembl_29_chemreps.txt", save_to="./data/chembl_29_s
 	chembl_df.drop(columns=["canonical_smiles"], inplace=True)
 	chembl_df.to_csv(save_to, index=False)
 
-	print(".csv file saved to: " + save_to)
+
+def create_selfies_file(selfies_df, save_to="./data/selfies_subset.txt", subset_size=100000, do_subset=True):
+	selfies_df.sample(frac=1).reset_index(drop=True)  # shuffling
+
+	if do_subset:
+		selfies_subset = selfies_df.selfies[:subset_size]
+	else:
+		selfies_subset = selfies_df.selfies
+	selfies_subset = selfies_subset.to_frame()
+	selfies_subset["selfies"].to_csv(save_to, index=False, header=False)
