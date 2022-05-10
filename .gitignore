@@ -1,0 +1,12 @@
+__pycache__
+.vscode
+
+finetuned_models/
+pretrained_models/
+chembl_29_selfies.csv
+chembl_29_selfies.zip
+chembl_29_selfies_subset.txt
+
+*.ipynb
+*.out
+*.toml
