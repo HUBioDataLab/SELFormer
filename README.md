@@ -6,7 +6,7 @@ SELFIES-Transformer is a command-line tool for pre-training and fine-tuning usin
 ```
 conda create -n selfiesTransfomers_env
 conda activate selfiesTransformers_env
-pip install -r requirements.yml
+conda env update --file data/requirements.yml
 ```
 
 ## Usage
@@ -14,7 +14,7 @@ pip install -r requirements.yml
 You can use SELFIES-Transformer for pretraining task using either SMILES or SELFIES data.
 
 ```
-python3 train_pretraining_model.py --smiles_dataset=data/chembl_29_chemreps.txt --selfies_dataset=data/chembl_29_selfies.csv --subset_size=100000 --prepared_data_path=data/selfies_subset.txt --bpe_path=data/BPETokenizer --roberta_fast_tokenizer_path=data/RobertaFastTokenizer --hyperparameters_path=data/pretraining_hyperparameters.yml
+python3 train_pretraining_model.py --smiles_dataset=data/chembl_29_chemreps.txt --selfies_dataset=data/chembl_29_selfies.csv --subset_size=100000 --prepared_data_path=data/selfies_data.txt --bpe_path=data/BPETokenizer --roberta_fast_tokenizer_path=data/RobertaFastTokenizer --hyperparameters_path=data/pretraining_hyperparameters.yml
 ```
 
 * __--smiles_dataset__: Path of the SMILES dataset. If the dataset provided with __--selfies_dataset__ exists, then this argument is not required. Else, it is required.
@@ -29,7 +29,7 @@ python3 train_pretraining_model.py --smiles_dataset=data/chembl_29_chemreps.txt 
 You can use the pre-trained models you trained and fine-tune them for binary classification tasks using SMILES data. Our program will convert it to SELFIES and train from there.
 
 ```
-python3 train_classification_model.py --model=data/saved_models/modelO_90epochs_saved_model --tokenizer=data/RobertaFastTokenizer --dataset=data/FinetuningDatasets/classification/bbbp/bbbp.csv --save_to=data/finetuned_models/modelO_bbbp_classification --target_column_id=1 --use_scaffold=1 --train_batch_size=16 --validation_batch_size=8 --num_epochs=25 --lr=5e-5 --wd=0
+python3 train_classification_model.py --model=data/saved_models/modelO --tokenizer=data/RobertaFastTokenizer --dataset=data/finetuning_datasets/classification/bbbp/bbbp.csv --save_to=data/finetuned_models/modelO_bbbp_classification --target_column_id=1 --use_scaffold=1 --train_batch_size=16 --validation_batch_size=8 --num_epochs=25 --lr=5e-5 --wd=0
 ```
 
 * __--model__: Directory of the pre-trained model. Required.
@@ -48,7 +48,7 @@ python3 train_classification_model.py --model=data/saved_models/modelO_90epochs_
 You can use the pre-trained models you trained and fine-tune them for multi-label classification using SMILES data. Your RobertaFastTokenizer files need to be inside the folder provided by __--model__. Our program will convert it to SELFIES and train from there.
 
 ```
-python3 train_classification_multilabel_model.py --model=data/saved_models/modelO_90epochs_saved_model --dataset=data/FinetuningDatasets/classification/tox21/tox21.csv --save_to=data/finetuned_models/modelO_tox21_classification --use_scaffold=1 --batch_size=16 --num_epochs=25 --lr=5e-5 --wd=0
+python3 train_classification_multilabel_model.py --model=data/saved_models/modelO --dataset=data/finetuning_datasets/classification/tox21/tox21.csv --save_to=data/finetuned_models/modelO_tox21_classification --use_scaffold=1 --batch_size=16 --num_epochs=25 --lr=5e-5 --wd=0
 ```
 
 * __--model__: Directory of the pre-trained model. Required.
@@ -64,7 +64,7 @@ python3 train_classification_multilabel_model.py --model=data/saved_models/model
 You can use the pre-trained models you trained and fine-tune them for regression tasks using SMILES data. Our program will convert it to SELFIES and train from there.
 
 ```
-python3 train_classification_model.py --model=data/saved_models/modelO_90epochs_saved_model --tokenizer=data/RobertaFastTokenizer --dataset=data/FinetuningDatasets/classification/bbbp/bbbp.csv --save_to=data/finetuned_models/modelO_bbbp_classification --target_column_id=1 --scaler=2 --use_scaffold=1 --train_batch_size=16 --validation_batch_size=8 --num_epochs=25 --lr=5e-5 --wd=0
+python3 train_classification_model.py --model=data/saved_models/modelO --tokenizer=data/RobertaFastTokenizer --dataset=data/finetuning_datasets/classification/bbbp/bbbp.csv --save_to=data/finetuned_models/modelO_bbbp_classification --target_column_id=1 --scaler=2 --use_scaffold=1 --train_batch_size=16 --validation_batch_size=8 --num_epochs=25 --lr=5e-5 --wd=0
 ```
 
 * __--model__: Directory of the pre-trained model. Required.
