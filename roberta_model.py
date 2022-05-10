@@ -2,8 +2,10 @@ import torch
 from torch.utils.data.dataset import Dataset
 
 import os
+
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
-os.environ["CUDA_VISIBLE_DEVICES"] = "6"
+os.environ["WANDB_DISABLED"] = "true"
+
 
 class CustomDataset(Dataset):
     def __init__(self, df, tokenizer, MAX_LEN):
@@ -32,6 +34,7 @@ from transformers import Trainer, TrainingArguments
 
 import math
 
+
 def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/selfies_subset.txt", robertatokenizer_path="./data/robertatokenizer/", save_to="./saved_model/"):
     TRAIN_BATCH_SIZE = hyperparameters_dict["TRAIN_BATCH_SIZE"]
     VALID_BATCH_SIZE = hyperparameters_dict["VALID_BATCH_SIZE"]
@@ -39,18 +42,10 @@ def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/self
     LEARNING_RATE = hyperparameters_dict["LEARNING_RATE"]
     WEIGHT_DECAY = hyperparameters_dict["WEIGHT_DECAY"]
     MAX_LEN = hyperparameters_dict["MAX_LEN"]
-    
 
-    config = RobertaConfig(
-        vocab_size=hyperparameters_dict["VOCAB_SIZE"], 
-        max_position_embeddings=hyperparameters_dict["MAX_POSITION_EMBEDDINGS"], 
-        num_attention_heads=hyperparameters_dict["NUM_ATTENTION_HEADS"], 
-        num_hidden_layers=hyperparameters_dict["NUM_HIDDEN_LAYERS"], 
-        type_vocab_size=hyperparameters_dict["TYPE_VOCAB_SIZE"],
-        hidden_size=hyperparameters_dict["HIDDEN_SIZE"]
-        )
+    config = RobertaConfig(vocab_size=hyperparameters_dict["VOCAB_SIZE"], max_position_embeddings=hyperparameters_dict["MAX_POSITION_EMBEDDINGS"], num_attention_heads=hyperparameters_dict["NUM_ATTENTION_HEADS"], num_hidden_layers=hyperparameters_dict["NUM_HIDDEN_LAYERS"], type_vocab_size=hyperparameters_dict["TYPE_VOCAB_SIZE"], hidden_size=hyperparameters_dict["HIDDEN_SIZE"])
 
-    #model = RobertaForMaskedLM(config=config)
+    # model = RobertaForMaskedLM(config=config)
     def _model_init():
         return RobertaForMaskedLM(config=config)
 
@@ -91,8 +86,8 @@ def train_and_save_roberta_model(hyperparameters_dict, selfies_path="./data/self
     print("build trainer with on device:", training_args.device, "with n gpus:", training_args.n_gpu)
     trainer.train()
     print("training finished.")
-    
+
     eval_results = trainer.evaluate()
     print(f">>> Perplexity: {math.exp(eval_results['eval_loss']):.2f}")
-    
+
     trainer.save_model(save_to)

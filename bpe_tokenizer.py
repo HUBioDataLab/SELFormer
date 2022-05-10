@@ -9,7 +9,10 @@ from os import mkdir
 
 
 def bpe_tokenizer(path="./data/selfies_subset.txt", save_to="./data/bpe/"):
-	mkdir(save_to)
+	try:
+		mkdir(save_to)
+	except FileExistsError:
+		pass
 
 	tokenizer = Tokenizer(BPE(unk_token="<unk>"))
 
@@ -20,5 +23,5 @@ def bpe_tokenizer(path="./data/selfies_subset.txt", save_to="./data/bpe/"):
 	trainer = BpeTrainer(special_tokens=["<unk>", "<s>", "</s>", "<pad>", "<mask>"])
 	tokenizer.train(files=[path], trainer=trainer)
 
-	tokenizer.save(save_to + "bpe.json", pretty=True)
+	tokenizer.save(save_to + "/bpe.json", pretty=True)
 	tokenizer.model.save(save_to)

@@ -4,6 +4,7 @@ import chemprop
 from pandarallel import pandarallel
 import to_selfies
 
+
 def smiles_to_selfies(df):
     df.insert(0, "selfies", df["smiles"])
     pandarallel.initialize()
@@ -13,6 +14,7 @@ def smiles_to_selfies(df):
     df.drop(columns=["smiles"], inplace=True)
 
     return df
+
 
 def train_val_test_split_multilabel(path, scaffold_split):
     main_df = pd.read_csv(path)
@@ -29,11 +31,13 @@ def train_val_test_split_multilabel(path, scaffold_split):
         (train, val, test) = chemprop.data.scaffold.scaffold_split(data=molecule_dataset, sizes=(0.8, 0.1, 0.1), seed=42, balanced=True)
         return (train, val, test)
 
-    else: # random split
+    else:  # random split
         from sklearn.model_selection import train_test_split
+
         train, val = train_test_split(main_df, test_size=0.2, random_state=42)
         val, test = train_test_split(val, test_size=0.5, random_state=42)
         return (train, val, test)
+
 
 def train_val_test_split(path, target_column_number=1, scaffold_split=False):
     main_df = pd.read_csv(path)
@@ -52,8 +56,9 @@ def train_val_test_split(path, target_column_number=1, scaffold_split=False):
         (train, val, test) = chemprop.data.scaffold.scaffold_split(data=molecule_dataset, sizes=(0.8, 0.1, 0.1), seed=42, balanced=True)
         return (train, val, test)
 
-    else: # random split
+    else:  # random split
         from sklearn.model_selection import train_test_split
+
         train, val = train_test_split(main_df, test_size=0.2, random_state=42)
         val, test = train_test_split(val, test_size=0.5, random_state=42)
         return (train, val, test)

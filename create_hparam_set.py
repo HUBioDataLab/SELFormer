@@ -33,7 +33,8 @@ def create_hparam_yml(TRAIN_BATCH_SIZE, TRAIN_EPOCHS, LEARNING_RATE, WEIGHT_DECA
         set_no += 1
 
     # Write to yaml file
-    with open(save_to, 'w') as f:
+    with open(save_to, "w") as f:
         yaml.dump(hparams, f)
+
 
 create_hparam_yml(TRAIN_BATCH_SIZE=[16, 32, 64], TRAIN_EPOCHS=[5, 10], LEARNING_RATE=[1e-5], WEIGHT_DECAY=[0.001], NUM_ATTENTION_HEADS=[4, 8], NUM_HIDDEN_LAYERS=[8, 12])
