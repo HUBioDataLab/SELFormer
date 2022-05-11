@@ -8,6 +8,10 @@ conda create -n selfiesTransfomers_env
 conda activate selfiesTransformers_env
 conda env update --file data/requirements.yml
 ```
+## Transformers Architecture
+Our pre-trained model is implemented as RobertaMaskedLM. We then achieve sequence outputs as the model's output to use for molecule representations. These representations will be used for fine-tuning. In order to use the sequence output for visualisation, we will be taking average of the sequence output.
+
+Our fine-tuning model’s architecture was based on RobertaForSequenceClassification’s architecture. Our model’s architecture for the fine-tuning process includes a pre-trained RoBERTa model as a base model and RobertaClassificationHead class for the next layers as a classifier. RobertaClassificationHead class consists of a dropout layer, a dense layer, tanh activation function, a dropout layer, and a final linear layer for a classification task or a regression task in this order respectively. We forward the sequence output of the pre-trained RoBERTa base model to the classifier to use during the fine-tuning process for supervised tasks. We can achieve sequence outputs as the fine-tuned models's output for molecule representations. In order to use the sequence output for visualisation, again we will be taking average of the sequence output.
 
 ## Usage
 ### Pre-Training
