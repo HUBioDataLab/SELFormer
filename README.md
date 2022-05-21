@@ -14,6 +14,7 @@ Our pre-trained model is implemented as RobertaMaskedLM. We then achieve sequenc
 Our fine-tuning model’s architecture was based on RobertaForSequenceClassification’s architecture. Our model’s architecture for the fine-tuning process includes a pre-trained RoBERTa model as a base model and RobertaClassificationHead class for the next layers as a classifier. RobertaClassificationHead class consists of a dropout layer, a dense layer, tanh activation function, a dropout layer, and a final linear layer for a classification task or a regression task in this order respectively. We forward the sequence output of the pre-trained RoBERTa base model to the classifier to use during the fine-tuning process for supervised tasks. We can achieve sequence outputs as the fine-tuned models's output for molecule representations. In order to use the sequence output for visualisation, again we will be taking average of the sequence output.
 
 ## Usage
+You can download our pretrained models from [here](https://drive.google.com/file/d/1zuVAKXCMc-HZHQo9y3Hu5zmQy51FGduI/view?usp=sharing).
 ### Pre-Training
 You can use SELFIES-Transformer for pretraining task using either SMILES or SELFIES data.
 
@@ -45,8 +46,8 @@ python3 train_classification_model.py --model=data/saved_models/modelO --tokeniz
 * __--train_batch_size__: Default: 8. Batch size for training. Optional.
 * __--validation_batch_size__ : Default: 8. Batch size for validation. Optional.
 * __--num_epochs__: Default: 50. Number of epochs to train. Optional.
-* __--lr__: Default: 1e-5: Learning rate for fine-tuning.
-* __--wd__: Default: 0.1: Weight decat for fine-tuning.
+* __--lr__: Default: 1e-5: Learning rate for fine-tuning. Optional.
+* __--wd__: Default: 0.1: Weight decat for fine-tuning. Optional.
 
 ### Multi-Label Classification
 You can use the pre-trained models you trained and fine-tune them for multi-label classification using SMILES data. Your RobertaFastTokenizer files need to be inside the folder provided by __--model__. Our program will convert it to SELFIES and train from there.
@@ -61,8 +62,8 @@ python3 train_classification_multilabel_model.py --model=data/saved_models/model
 * __--use_scaffold__: Default: 0. By default the program will do random split on the fine-tuning dataset. Setting this value to 1 will cause the program to do scaffold split instead. Optional.
 * __--batch_size__: Default: 8. Batch size for training. Optional.
 * __--num_epochs__: Default: 50. Number of epochs to train. Optional.
-* __--lr__: Default: 1e-5: Learning rate for fine-tuning.
-* __--wd__: Default: 0.1: Weight decat for fine-tuning.
+* __--lr__: Default: 1e-5: Learning rate for fine-tuning. Optional.
+* __--wd__: Default: 0.1: Weight decat for fine-tuning. Optional.
 
 ### Regression
 You can use the pre-trained models you trained and fine-tune them for regression tasks using SMILES data. Our program will convert it to SELFIES and train from there.
@@ -81,5 +82,5 @@ python3 train_classification_model.py --model=data/saved_models/modelO --tokeniz
 * __--train_batch_size__: Default: 8. Batch size for training. Optional.
 * __--validation_batch_size__ : Default: 8. Batch size for validation. Optional.
 * __--num_epochs__: Default: 50. Number of epochs to train. Optional.
-* __--lr__: Default: 1e-5: Learning rate for fine-tuning.
-* __--wd__: Default: 0.1: Weight decat for fine-tuning.
+* __--lr__: Default: 1e-5: Learning rate for fine-tuning. Optional.
+* __--wd__: Default: 0.1: Weight decat for fine-tuning. Optional.
