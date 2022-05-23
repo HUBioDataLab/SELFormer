@@ -15,6 +15,7 @@ Our fine-tuning model’s architecture was based on RobertaForSequenceClassifica
 
 ## Usage
 You can download our pretrained models from [here](https://drive.google.com/file/d/1zuVAKXCMc-HZHQo9y3Hu5zmQy51FGduI/view?usp=sharing).
+
 You can download the released CHEMBL29's molecules' embeddings that are obtained from our best performed pre-trained model from [here](https://drive.google.com/drive/folders/1Xq70LX-mVhH8Oug06HGzK_oWN0N3XG-d?usp=sharing).
 ### Pre-Training
 You can use SELFIES-Transformer for pretraining task using either SMILES or SELFIES data.
