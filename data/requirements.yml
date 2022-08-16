@@ -1,4 +1,4 @@
-name: design_project
+name: selfiesTransformer_env
 channels:
   - bjrn
   - pytorch
@@ -346,4 +346,3 @@ dependencies:
     - watchdog==2.1.7
     - webencodings==0.5.1
     - widgetsnbextension==3.6.0
-prefix: /home/designproject/anaconda3/envs/design_project
