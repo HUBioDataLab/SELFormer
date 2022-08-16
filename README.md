@@ -11,7 +11,7 @@ Our fine-tuning model’s architecture was based on RobertaForSequenceClassifica
 ## Installation
 SELFIES-Transformer is a command-line tool for pre-training and fine-tuning models using molecules represented by SELFIES notation. It should run in any Unix-like operating system. You can install it by first cloning the repository and then running commands below. [requirements.yml](/data/requirements.yml) is located under the data folder.
 ```
-conda create -n selfiesTransfomers_env
+conda create -n selfiesTransformers_env
 conda activate selfiesTransformers_env
 conda env update --file data/requirements.yml
 ```
