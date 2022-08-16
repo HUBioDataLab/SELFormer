@@ -10,7 +10,7 @@ from pandarallel import pandarallel
 from transformers import RobertaTokenizer, RobertaModel, RobertaConfig
 import torch
 
-df = pd.read_csv("./data/chembl_29_selfies.csv") # path of the selfies data
+df = pd.read_csv("./data/molecule_dataset_selfies.csv") # path of the selfies data
 
 model_name = "./data/pretrained_models/modelO" # path of the pre-trained model
 config = RobertaConfig.from_pretrained(model_name)
