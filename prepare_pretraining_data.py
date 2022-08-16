@@ -6,7 +6,7 @@ import to_selfies
 
 def prepare_data(path="data/molecule_dataset_smiles.txt", save_to="./data/molecule_dataset_selfies.csv"):
     chembl_df = pd.read_csv(path, sep="\t")  # data is TAB separated.
-    chembl_df.drop(columns=["standard_inchi", "standard_inchi_key"], inplace=True)  # we are not interested in "standard_inchi" and "standard_inchi_key" columns.
+    # chembl_df.drop(columns=["standard_inchi", "standard_inchi_key"], inplace=True)  # we are not interested in "standard_inchi" and "standard_inchi_key" columns.
     chembl_df["selfies"] = chembl_df["canonical_smiles"]  # creating a new column "selfies" that is a copy of "canonical_smiles"
 
     pandarallel.initialize()
