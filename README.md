@@ -21,7 +21,7 @@ Please extract the zip files in the data folder.
 ## Generating Molecule Embeddings Using Pre-trained Models
 Please first download our pretrained models [here](https://drive.google.com/file/d/1zuVAKXCMc-HZHQo9y3Hu5zmQy51FGduI/view?usp=sharing) and place the folder named "pretrained_models" in the data directory.
 
-If you only have SMILES notations of your molecules, you may run the command below to construct SELFIES representations (the path and name of the input SMILES representation file should be: "/data/molecule_dataset_smiles.csv"):
+If you have SMILES notations of your molecules but not SELFIES, you may run the command below to construct SELFIES representations:
 
 ```
 python3 generate_selfies.py --smiles_dataset=data/molecule_dataset_smiles.txt --selfies_dataset=data/molecule_dataset_selfies.csv
