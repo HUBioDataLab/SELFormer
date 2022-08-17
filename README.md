@@ -48,7 +48,7 @@ You can directly download the embeddings of all molecules from CHEMBL29 that are
 You can pretrain a SELFIES-Transformer model using either SMILES or SELFIES data.
 
 ```
-python3 train_pretraining_model.py --smiles_dataset=data/chembl_29_chemreps.txt --selfies_dataset=data/chembl_29_selfies.csv --subset_size=100000 --prepared_data_path=data/selfies_data.txt --bpe_path=data/BPETokenizer --roberta_fast_tokenizer_path=data/RobertaFastTokenizer --hyperparameters_path=data/pretraining_hyperparameters.yml
+python3 train_pretraining_model.py --smiles_dataset=data/molecule_dataset_smiles.txt --selfies_dataset=data/molecule_dataset_selfies.csv --subset_size=100000 --prepared_data_path=data/selfies_data.txt --bpe_path=data/BPETokenizer --roberta_fast_tokenizer_path=data/RobertaFastTokenizer --hyperparameters_path=data/pretraining_hyperparameters.yml
 ```
 
 * __--smiles_dataset__: Path of the SMILES dataset. If the dataset provided with __--selfies_dataset__ exists, then this argument is not required. Else, it is required.
