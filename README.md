@@ -9,21 +9,19 @@ Our fine-tuning model’s architecture was based on RobertaForSequenceClassifica
 
 
 ## Installation
-SELFIES-Transformer is a command-line tool for pre-training and fine-tuning models using molecules represented by SELFIES notation. It should run in any Unix-like operating system. You can install it by first cloning the repository and then running commands below. [requirements.yml](/data/requirements.yml) is located under the data folder.
+SELFIES-Transformer is a command-line tool for pre-training and fine-tuning models using molecules represented by SELFIES notation. It should run in Unix-like operating systems (tested on Ubuntu). You can install it by first cloning the repository and then running commands below. [requirements.yml](/data/requirements.yml) is located under the data folder.
 ```
-conda create -n selfiesTransfomers_env
-conda activate selfiesTransformers_env
+conda create -n selfiesTransformer_env
+conda activate selfiesTransformer_env
 conda env update --file data/requirements.yml
 ```
-If you get an error you can also install transformers via pip
-```
-pip install transformers
-```
+
+Please extract the zip files in the data folder.
 
 ## Generating Molecule Embeddings Using Pre-trained Models
-Please first download our pretrained models [here](https://drive.google.com/file/d/1zuVAKXCMc-HZHQo9y3Hu5zmQy51FGduI/view?usp=sharing) and place the folder named "pretrained_models" in the main directory of the repo.
+Please first download our pretrained models [here](https://drive.google.com/file/d/1zuVAKXCMc-HZHQo9y3Hu5zmQy51FGduI/view?usp=sharing) and place the folder named "pretrained_models" in the data directory.
 
-If you only have SMILES notations of your molecules you may run the command below to construct SELFIES representations (the path and name of the input SMILES representation file should be: "/data/molecule_dataset_smiles.csv"):
+If you only have SMILES notations of your molecules, you may run the command below to construct SELFIES representations (the path and name of the input SMILES representation file should be: "/data/molecule_dataset_smiles.csv"):
 
 ```
 python3 prepare_pretraining_data.py
