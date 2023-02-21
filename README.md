@@ -53,8 +53,8 @@ python3 run_svm.py --dataset_path=data/finetuning_datasets --model_file=data/pre
 ```
 * __--dataset_path__: Path of the directory containing the MoleculeNet datasets.
 * __--model_file__: Path of the pretrained model to be used.
-* __--generate_embeddings__: If set to 1, the program will generate embeddings for the MoleculeNet datasets. If set to 0, the program will use the pre-generated embeddings.
-*__--run_svm__: If set to 1, the program will run SVM on the generated embeddings. If set to 0, the program will not run SVM.
+* __--generate_embeddings__: If set to 1, the program will generate embeddings for the MoleculeNet datasets. If set to 0, the program will use the pre-generated embeddings
+* __--run_svm__: If set to 1, the program will run SVM on the generated embeddings. If set to 0, the program will not run SVM.
 
 ## Training and Evaluating Models
 
