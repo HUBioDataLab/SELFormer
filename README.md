@@ -131,4 +131,4 @@ python3 train_classification_model.py --model=data/saved_models/modelO --tokeniz
 * __--validation_batch_size__ : Default: 8. Batch size for validation. Optional.
 * __--num_epochs__: Default: 50. Number of epochs to train. Optional.
 * __--lr__: Default: 1e-5: Learning rate for fine-tuning. Optional.
-* __--wd__: Default: 0.1: Weight decat for fine-tuning. Optional.
+* __--wd__: Default: 0.1: Weight decay for fine-tuning. Optional.
