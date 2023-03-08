@@ -115,7 +115,7 @@ python3 train_classification_multilabel_model.py --model=data/saved_models/model
 You can use the pre-trained models you trained and fine-tune them for regression tasks using SMILES data. Our program will convert it to SELFIES and train from there.
 
 ```
-python3 train_classification_model.py --model=data/saved_models/modelO --tokenizer=data/RobertaFastTokenizer --dataset=data/finetuning_datasets/classification/bbbp/bbbp.csv --save_to=data/finetuned_models/modelO_bbbp_classification --target_column_id=1 --scaler=2 --use_scaffold=1 --train_batch_size=16 --validation_batch_size=8 --num_epochs=25 --lr=5e-5 --wd=0
+python3 train_regression_model.py --model=data/saved_models/modelO --tokenizer=data/RobertaFastTokenizer --dataset=data/finetuning_datasets/regression/esol/esol.csv --save_to=data/finetuned_models/modelO_esol_regression --target_column_id=-1 --scaler=2 --use_scaffold=1 --train_batch_size=16 --validation_batch_size=8 --num_epochs=25 --lr=5e-5 --wd=0
 ```
  
 * __--model__: Directory of the pre-trained model. Required.
