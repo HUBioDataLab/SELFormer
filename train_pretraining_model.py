@@ -35,16 +35,17 @@ if not isfile(args.prepared_data_path):
 print("SELFIES .txt is ready for tokenization.")
 
 print("Creating BPE tokenizer.")
-if not isfile(args.bpe_path):
+if not isfile(args.bpe_path+"/merges.txt"):
     import bpe_tokenizer
 
     bpe_tokenizer.bpe_tokenizer(path=args.prepared_data_path, save_to=args.bpe_path)
 print("BPE Tokenizer is ready.")
 
 print("Creating RobertaTokenizerFast.")
-import roberta_tokenizer
-
-roberta_tokenizer.save_roberta_tokenizer(path=args.bpe_path, save_to=args.roberta_fast_tokenizer_path)
+if not isfile(args.roberta_fast_tokenizer_path+"/merges.txt"):
+    import roberta_tokenizer
+    
+    roberta_tokenizer.save_roberta_tokenizer(path=args.bpe_path, save_to=args.roberta_fast_tokenizer_path)
 print("RobertaFastTokenizer is ready.")
 
 import yaml
