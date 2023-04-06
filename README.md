@@ -143,3 +143,36 @@ python3 train_regression_model.py --model=data/saved_models/modelO --tokenizer=d
 * __--num_epochs__: Default: 50. Number of epochs. Optional.
 * __--lr__: Default: 1e-5: Learning rate. Optional.
 * __--wd__: Default: 0.1: Weight decay. Optional.
+
+
+## Prediction with Trained Models 
+
+### Binary Classification
+
+To make predictions for either BACE, BBBP, and HIV datasets, please run the command below. Change the indicated arguments for different tasks. Default parameters will load fine-tuned model on BACE. 
+
+```
+python3 binary_class_pred.py --task=bace --model_name=data/finetuned_models/modelO_bbbp_scaffold_optimized --tokenizer=data/RobertaFastTokenizer --test_set=data/finetuning_datasets/classification/bace/bace.csv --training_args=data/finetuned_models/modelO_bace_scaffold_optimized/training_args.bin 
+```
+
+* __--task__: Binary classification task to choose. (bace, bbbp, hiv) Required.
+* __--model_name__: Path of the fine-tuned model. Required.
+* __--tokenizer__: Tokenirez selection. Required.
+* __--test_set__: Molecules to make predictions. Should be a CSV file with a single column. Header should be smiles. Required.
+* __--training_args__: Initialize the model arguments. Required.
+
+### Regression
+
+To make predictions for either ESOL, FreeSolv, Lipophilicity, and PDBBind datasets, please run the command below. Change the indicated arguments for different tasks. Default parameters will load fine-tuned model on ESOL. 
+
+```
+python3 regression_pred.py --task=esol --model_name=data/finetuned_models/esol_regression --tokenizer=data/RobertaFastTokenizer --test_set=data/finetuning_datasets/classification/bace/bace.csv --training_args=data/finetuned_models/esol_regression/training_args.bin 
+```
+
+* __--task__: Binary classification task to choose. (esol, freesolv, lipo, pdbbind_full) Required.
+* __--model_name__: Path of the fine-tuned model. Required.
+* __--tokenizer__: Tokenirez selection. Required.
+* __--test_set__: Molecules to make predictions. Should be a CSV file with a single column. Header should be smiles. Required.
+* __--training_args__: Initialize the model arguments. Required. 
+
+
