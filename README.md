@@ -145,7 +145,9 @@ python3 train_regression_model.py --model=data/saved_models/modelO --tokenizer=d
 * __--wd__: Default: 0.1: Weight decay. Optional.
 
 
-## Prediction with Trained Models 
+## Prediction with Fine-tuned Models 
+
+Fine-tuned SELFormer models are available for download [here](https://drive.google.com/drive/folders/1LVw1YZBL1AUAGCxIkavz0KMJNVyzxAXG?usp=share_link). To make predictions with these models, please download them and follow the instructions below.
 
 ### Binary Classification
 
@@ -157,9 +159,27 @@ python3 binary_class_pred.py --task=bace --model_name=data/finetuned_models/mode
 
 * __--task__: Binary classification task to choose. (bace, bbbp, hiv) Required.
 * __--model_name__: Path of the fine-tuned model. Required.
-* __--tokenizer__: Tokenirez selection. Required.
+* __--tokenizer__: Tokenizer selection. Required.
 * __--test_set__: Molecules to make predictions. Should be a CSV file with a single column. Header should be smiles. Required.
 * __--training_args__: Initialize the model arguments. Required.
+
+<br/>
+
+### Multi-Label Classification
+
+To make predictions for either Tox21 and SIDER datasets, please run the command below. Change the indicated arguments for different tasks. Default parameters will load fine-tuned model on SIDER. 
+
+```
+python3 multilabel_class_pred.py --task=sider --model_name=data/finetuned_models/modelO_sider_scaffold_optimized --test_set=data/finetuning_datasets/classification/sider/sider.csv --training_args=data/finetuned_models/modelO_sider_scaffold_optimized/training_args.bin --num_labels=27
+```
+
+* __--task__: Multi-label classification task to choose. (tox21, sider) Required.
+* __--model_name__: Path of the fine-tuned model. Required.
+* __--test_set__: Molecules to make predictions. Should be a CSV file with a single column containing SMILES. Header should be 'smiles'. Required.
+* __--training_args__: Initialize the model arguments. Required.
+* __--num_labels__: Number of labels. Required.
+
+<br/>
 
 ### Regression
 
@@ -171,7 +191,7 @@ python3 regression_pred.py --task=esol --model_name=data/finetuned_models/esol_r
 
 * __--task__: Binary classification task to choose. (esol, freesolv, lipo, pdbbind_full) Required.
 * __--model_name__: Path of the fine-tuned model. Required.
-* __--tokenizer__: Tokenirez selection. Required.
+* __--tokenizer__: Tokenizer selection. Required.
 * __--test_set__: Molecules to make predictions. Should be a CSV file with a single column. Header should be smiles. Required.
 * __--training_args__: Initialize the model arguments. Required. 
 
