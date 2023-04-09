@@ -151,7 +151,7 @@ Fine-tuned SELFormer models are available for download [here](https://drive.goog
 
 ### Binary Classification
 
-To make predictions for either BACE, BBBP, and HIV datasets, please run the command below. Change the indicated arguments for different tasks. Default parameters will load fine-tuned model on BACE. 
+To make predictions for either BACE, BBBP, and HIV datasets, please run the command below. Change the indicated arguments for different tasks. Default parameters will load fine-tuned model on BBBP. 
 
 ```
 python3 binary_class_pred.py --task=bbbp --model_name=data/finetuned_models/modelO_bbbp_scaffold_optimized --tokenizer=data/RobertaFastTokenizer --test_set=data/finetuning_datasets/classification/bbbp/bbbp.csv --training_args=data/finetuned_models/modelO_bbbp_scaffold_optimized/training_args.bin 
