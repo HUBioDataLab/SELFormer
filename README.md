@@ -154,7 +154,7 @@ Fine-tuned SELFormer models are available for download [here](https://drive.goog
 To make predictions for either BACE, BBBP, and HIV datasets, please run the command below. Change the indicated arguments for different tasks. Default parameters will load fine-tuned model on BACE. 
 
 ```
-python3 binary_class_pred.py --task=bace --model_name=data/finetuned_models/modelO_bbbp_scaffold_optimized --tokenizer=data/RobertaFastTokenizer --test_set=data/finetuning_datasets/classification/bace/bace.csv --training_args=data/finetuned_models/modelO_bace_scaffold_optimized/training_args.bin 
+python3 binary_class_pred.py --task=bbbp --model_name=data/finetuned_models/modelO_bbbp_scaffold_optimized --tokenizer=data/RobertaFastTokenizer --test_set=data/finetuning_datasets/classification/bbbp/bbbp.csv --training_args=data/finetuned_models/modelO_bbbp_scaffold_optimized/training_args.bin 
 ```
 
 * __--task__: Binary classification task to choose. (bace, bbbp, hiv) Required.
@@ -186,7 +186,7 @@ python3 multilabel_class_pred.py --task=sider --model_name=data/finetuned_models
 To make predictions for either ESOL, FreeSolv, Lipophilicity, and PDBBind datasets, please run the command below. Change the indicated arguments for different tasks. Default parameters will load fine-tuned model on ESOL. 
 
 ```
-python3 regression_pred.py --task=esol --model_name=data/finetuned_models/esol_regression --tokenizer=data/RobertaFastTokenizer --test_set=data/finetuning_datasets/classification/bace/bace.csv --training_args=data/finetuned_models/esol_regression/training_args.bin 
+python3 regression_pred.py --task=esol --model_name=data/finetuned_models/esol_regression --tokenizer=data/RobertaFastTokenizer --test_set=data/finetuning_datasets/classification/esol/esol.csv --training_args=data/finetuned_models/esol_regression/training_args.bin 
 ```
 
 * __--task__: Binary classification task to choose. (esol, freesolv, lipo, pdbbind_full) Required.
