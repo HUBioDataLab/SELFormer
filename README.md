@@ -159,7 +159,7 @@ python3 train_regression_model.py --model=data/saved_models/modelO --tokenizer=d
 
 <br/>
 
-## Prediction with Fine-tuned Models 
+## Producing Molecular Property Predictions with Fine-tuned Models 
 
 Fine-tuned SELFormer models are available for download [here](https://drive.google.com/drive/folders/1LVw1YZBL1AUAGCxIkavz0KMJNVyzxAXG?usp=share_link). To make predictions with these models, please follow the instructions below.
 
