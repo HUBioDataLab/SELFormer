@@ -8,6 +8,9 @@ Automated computational analysis of the vast chemical space is critical for nume
 
 <img width="650" alt="Figure1_selformer_architecture" src="https://user-images.githubusercontent.com/13165170/229302081-94951d41-6f35-4f0f-a6dc-8c5914984f25.png">
 
+**Figure.** The schematic representation of the SELFormer architecture and the experiments conducted. **Left:** the self-supervised pre-training utilizes the transformer encoder module via masked language modeling for learning concise and informative representations of small molecules encoded by their SELFIES notation. **Right:** the pre-trained model has been fine-tuned independently on numerous molecular property-based classification and regression tasks.
+
+
 <br/>
 
 ## The Architecture of SELFormer
