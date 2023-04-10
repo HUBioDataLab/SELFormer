@@ -99,8 +99,6 @@ You can use commands below to fine-tune a pre-trained model for various molecula
 
 To fine-tune a pre-trained model on a binary classification dataset, please run the command below. 
 
-<br/>
-
 ```
 python3 train_classification_model.py --model=data/saved_models/modelO --tokenizer=data/RobertaFastTokenizer --dataset=data/finetuning_datasets/classification/bbbp/bbbp.csv --save_to=data/finetuned_models/modelO_bbbp_classification --target_column_id=1 --use_scaffold=1 --train_batch_size=16 --validation_batch_size=8 --num_epochs=25 --lr=5e-5 --wd=0
 ```
