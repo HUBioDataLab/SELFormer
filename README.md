@@ -1,5 +1,9 @@
 # SELFormer: Molecular Representation Learning via SELFIES Language Models
 
+<p align="center">
+  <a href="http://www.gnu.org/licenses/"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg"/></a> 
+</p>
+
 Automated computational analysis of the vast chemical space is critical for numerous fields of research such as drug discovery and material science. Representation learning techniques have recently been employed with the primary objective of generating compact and informative numerical expressions of complex data, for efficient usage in subsequent prediction tasks. One approach to efficiently learn molecular representations is processing string-based notations of chemicals via natural language processing (NLP) algorithms. Majority of the methods proposed so far utilize SMILES notations for this purpose, which is the most extensively used string-based encoding for molecules. However, SMILES is associated with numerous problems related to validity and robustness, which may prevent the model from effectively uncovering the knowledge hidden in the data. In this study, we propose SELFormer, a transformer architecture-based chemical language model that utilizes a 100% valid, compact and expressive notation, SELFIES, as input, in order to learn flexible and high-quality molecular representations. SELFormer is pre-trained on two million drug-like compounds and fine-tuned for diverse molecular property prediction tasks. Our performance evaluation has revealed that, SELFormer outperforms all competing methods, including graph learning-based approaches and SMILES-based chemical language models, on predicting aqueous solubility of molecules and adverse drug reactions, while producing comparable results for the remaining tasks. We also visualized molecular representations learned by SELFormer via dimensionality reduction, which indicated that even the pre-trained model can discriminate molecules with differing structural properties. We shared SELFormer as a programmatic tool, together with its datasets and pre-trained models. Overall, our research demonstrates the benefit of using the SELFIES notations in the context of chemical language modeling and opens up new possibilities for the design and discovery of novel drug candidates with desired features.
 
 <img width="911" alt="Figure1_selformer_architecture" src="https://user-images.githubusercontent.com/13165170/229302081-94951d41-6f35-4f0f-a6dc-8c5914984f25.png">
@@ -211,4 +215,14 @@ python3 regression_pred.py --task=esol --model_name=data/finetuned_models/esol_r
 * __--test_set__: Molecules to make predictions. Should be a CSV file with a single column. Header should be smiles (required).
 * __--training_args__: Initialize the model arguments (required).
 
+<br/>
+
+## License
+Copyright (C) 2023 HUBioDataLab
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.
 
