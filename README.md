@@ -62,19 +62,19 @@ python3 get_moleculenet_embeddings.py --dataset_path=data/finetuning_datasets --
 ## Training and Evaluating Models
 
 ### Pre-Training
-To pre-train a model, please run the command below. If you have a SELFIES dataset, you can use it directly by giving the path of the dataset to __--selfies_dataset__. If you have a SMILES dataset, you can give the path of the dataset to __--smiles_dataset__ and the SELFIES dataset will be created at the path given to __--selfies_dataset__.
+To pre-train a model, please run the command below. If you have a SELFIES dataset, you can use it directly by giving the path of the dataset to __--selfies_dataset__. If you have a SMILES dataset, you can give the path of the dataset to __--smiles_dataset__ and the SELFIES representations will be created at the path given to __--selfies_dataset__.
 
 ```
 python3 train_pretraining_model.py --smiles_dataset=data/molecule_dataset_smiles.txt --selfies_dataset=data/molecule_dataset_selfies.csv --prepared_data_path=data/selfies_data.txt --bpe_path=data/BPETokenizer --roberta_fast_tokenizer_path=data/RobertaFastTokenizer --hyperparameters_path=data/pretraining_hyperparameters.yml --subset_size=100000
 ```
 
-* __--smiles_dataset__: Path of the SMILES dataset. It is required if __--selfies_dataset__ does not exist. Optional.
-* __--selfies_dataset__: Path of the SELFIES dataset. If a SELFIES dataset does not exist, it will be created at the given path using the __--smiles_dataset__. If it exists, SELFIES dataset will be used directly. Required.
-* __--prepared_data_path__: Path of the intermediate file that will be created during pre-training. It will be used for tokenization. If it does not exist, it will be created at the given path. Required.
-* __--bpe_path__: Path of the BPE tokenizer. If it does not exist, it will be created at the given path. Required.
-* __--roberta_fast_tokenizer_path__: Path of the RobertaTokenizerFast tokenizer. If it does not exist, it will be created at the given path. Required.
-* __--hyperparameters_path__: Path of the yaml file that contains the hyperparameter sets to be tested. Note that these sets will be tested one by one and not in parallel. Example file is available at /data/pretraining_hyperparameters.yml. Required.
-* __--subset_size__: The size of the subset of the dataset that will be used for pre-training. By default, the whole dataset will be used. Optional.
+* __--smiles_dataset__: Path of the SMILES dataset. It is required if __--selfies_dataset__ does not exist (optional).
+* __--selfies_dataset__: Path of the SELFIES dataset. If a SELFIES dataset does not exist, it will be created at the given path using the __--smiles_dataset__. If it exists, SELFIES dataset will be used directly (required).
+* __--prepared_data_path__: Path of the intermediate file that will be created during pre-training. It will be used for tokenization. If it does not exist, it will be created at the given path (required).
+* __--bpe_path__: Path of the BPE tokenizer. If it does not exist, it will be created at the given path (required).
+* __--roberta_fast_tokenizer_path__: Path of the RobertaTokenizerFast tokenizer. If it does not exist, it will be created at the given path (required).
+* __--hyperparameters_path__: Path of the yaml file that contains the hyperparameter sets to be tested. Note that these sets will be tested one by one and not in parallel. Example file is available at /data/pretraining_hyperparameters.yml (required).
+* __--subset_size__: The size of the subset of the dataset that will be used for pre-training. By default, the whole dataset will be used (optional).
 
 ### Fine-tuning on Molecular Property Prediction
 
@@ -90,17 +90,17 @@ To fine-tune a pre-trained model on a binary classification dataset, please run 
 python3 train_classification_model.py --model=data/saved_models/modelO --tokenizer=data/RobertaFastTokenizer --dataset=data/finetuning_datasets/classification/bbbp/bbbp.csv --save_to=data/finetuned_models/modelO_bbbp_classification --target_column_id=1 --use_scaffold=1 --train_batch_size=16 --validation_batch_size=8 --num_epochs=25 --lr=5e-5 --wd=0
 ```
 
-* __--model__: Directory of the pre-trained model. Required.
-* __--tokenizer__: Directory of the RobertaFastTokenizer. Required.
-* __--dataset__: Path of the fine-tuning dataset. Required.
-* __--save_to__: Directory where the fine-tuned model will be saved. Required.
-* __--target_column_id__: Default: 1. The column id of the target column in the fine-tuning dataset. Optional.
-* __--use_scaffold__: Default: 0. Determines whether to use scaffold splitting (1) or random splitting (0). Optional.
-* __--train_batch_size__: Default: 8. Optional.
-* __--validation_batch_size__ : Default: 8. Optional.
-* __--num_epochs__: Default: 50. Number of epochs. Optional.
-* __--lr__: Default: 1e-5: Learning rate. Optional.
-* __--wd__: Default: 0.1: Weight decay. Optional.
+* __--model__: Directory of the pre-trained model (required).
+* __--tokenizer__: Directory of the RobertaFastTokenizer (required).
+* __--dataset__: Path of the fine-tuning dataset (required).
+* __--save_to__: Directory where the fine-tuned model will be saved (required).
+* __--target_column_id__: Default: 1. The column id of the target column in the fine-tuning dataset (optional).
+* __--use_scaffold__: Default: 0. Determines whether to use scaffold splitting (1) or random splitting (0) (optional).
+* __--train_batch_size__: Default: 8 (optional).
+* __--validation_batch_size__ : Default: 8 (optional).
+* __--num_epochs__: Default: 50. Number of epochs (optional).
+* __--lr__: Default: 1e-5: Learning rate (optional).
+* __--wd__: Default: 0.1: Weight decay (optional).
 
 <br/>
 
@@ -112,14 +112,14 @@ To fine-tune a pre-trained model on a multi-label classification dataset, please
 python3 train_classification_multilabel_model.py --model=data/saved_models/modelO --dataset=data/finetuning_datasets/classification/tox21/tox21.csv --save_to=data/finetuned_models/modelO_tox21_classification --use_scaffold=1 --batch_size=16 --num_epochs=25 --lr=5e-5 --wd=0
 ```
 
-* __--model__: Directory of the pre-trained model. Required.
-* __--dataset__: Path of the fine-tuning dataset. Required.
-* __--save_to__: Directory where the fine-tuned model will be saved. Required.
-* __--use_scaffold__: Default: 0. Determines whether to use scaffold splitting (1) or random splitting (0). Optional.
-* __--batch_size__: Default: 8. Train batch size. Optional.
-* __--num_epochs__: Default: 50. Number of epochs. Optional.
-* __--lr__: Default: 1e-5: Learning rate. Optional.
-* __--wd__: Default: 0.1: Weight decay. Optional.
+* __--model__: Directory of the pre-trained model (required).
+* __--dataset__: Path of the fine-tuning dataset (required).
+* __--save_to__: Directory where the fine-tuned model will be saved (required).
+* __--use_scaffold__: Default: 0. Determines whether to use scaffold splitting (1) or random splitting (0) (optional).
+* __--batch_size__: Default: 8. Train batch size (optional).
+* __--num_epochs__: Default: 50. Number of epochs (optional).
+* __--lr__: Default: 1e-5: Learning rate (optional).
+* __--wd__: Default: 0.1: Weight decay (optional).
 
 <br/>
 
@@ -131,18 +131,18 @@ To fine-tune a pre-trained model on a regression dataset, please run the command
 python3 train_regression_model.py --model=data/saved_models/modelO --tokenizer=data/RobertaFastTokenizer --dataset=data/finetuning_datasets/regression/esol/esol.csv --save_to=data/finetuned_models/modelO_esol_regression --target_column_id=-1 --scaler=2 --use_scaffold=1 --train_batch_size=16 --validation_batch_size=8 --num_epochs=25 --lr=5e-5 --wd=0
 ```
  
-* __--model__: Directory of the pre-trained model. Required.
-* __--tokenizer__: Directory of the RobertaFastTokenizer. Required.
-* __--dataset__: Path of the fine-tuning dataset. Required.
-* __--save_to__: Directory where the fine-tuned model will be saved. Required.
-* __--target_column_id__: Default: 1. The column id of the target column in the fine-tuning dataset. Optional.
-* __--scaler__: Default: 0. Method to be used for scaling the target values. 0 for no scaling, 1 for min-max scaling, 2 for standard scaling. Optional.
-* __--use_scaffold__: Default: 0. Determines whether to use scaffold splitting (1) or random splitting (0). Optional.
-* __--train_batch_size__: Default: 8. Optional.
-* __--validation_batch_size__ : Default: 8. Optional.
-* __--num_epochs__: Default: 50. Number of epochs. Optional.
-* __--lr__: Default: 1e-5: Learning rate. Optional.
-* __--wd__: Default: 0.1: Weight decay. Optional.
+* __--model__: Directory of the pre-trained model (required).
+* __--tokenizer__: Directory of the RobertaFastTokenizer (required).
+* __--dataset__: Path of the fine-tuning dataset (required).
+* __--save_to__: Directory where the fine-tuned model will be saved (required).
+* __--target_column_id__: Default: 1. The column id of the target column in the fine-tuning dataset (optional).
+* __--scaler__: Default: 0. Method to be used for scaling the target values. 0 for no scaling, 1 for min-max scaling, 2 for standard scaling (optional).
+* __--use_scaffold__: Default: 0. Determines whether to use scaffold splitting (1) or random splitting (0) (optional).
+* __--train_batch_size__: Default: 8 (optional).
+* __--validation_batch_size__ : Default: 8 (optional).
+* __--num_epochs__: Default: 50. Number of epochs (optional).
+* __--lr__: Default: 1e-5: Learning rate (optional).
+* __--wd__: Default: 0.1: Weight decay (optional).
 
 
 ## Prediction with Fine-tuned Models 
@@ -157,11 +157,11 @@ To make predictions for either BACE, BBBP, and HIV datasets, please run the comm
 python3 binary_class_pred.py --task=bbbp --model_name=data/finetuned_models/modelO_bbbp_scaffold_optimized --tokenizer=data/RobertaFastTokenizer --test_set=data/finetuning_datasets/classification/bbbp/bbbp.csv --training_args=data/finetuned_models/modelO_bbbp_scaffold_optimized/training_args.bin 
 ```
 
-* __--task__: Binary classification task to choose. (bace, bbbp, hiv) Required.
-* __--model_name__: Path of the fine-tuned model. Required.
-* __--tokenizer__: Tokenizer selection. Required.
-* __--test_set__: Molecules to make predictions. Should be a CSV file with a single column. Header should be smiles. Required.
-* __--training_args__: Initialize the model arguments. Required.
+* __--task__: Binary classification task to choose. (bace, bbbp, hiv) (required).
+* __--model_name__: Path of the fine-tuned model (required).
+* __--tokenizer__: Tokenizer selection (required).
+* __--test_set__: Molecules to make predictions. Should be a CSV file with a single column. Header should be smiles (required).
+* __--training_args__: Initialize the model arguments (required).
 
 <br/>
 
@@ -173,11 +173,11 @@ To make predictions for either Tox21 and SIDER datasets, please run the command 
 python3 multilabel_class_pred.py --task=sider --model_name=data/finetuned_models/modelO_sider_scaffold_optimized --test_set=data/finetuning_datasets/classification/sider/sider.csv --training_args=data/finetuned_models/modelO_sider_scaffold_optimized/training_args.bin --num_labels=27
 ```
 
-* __--task__: Multi-label classification task to choose. (tox21, sider) Required.
-* __--model_name__: Path of the fine-tuned model. Required.
-* __--test_set__: Molecules to make predictions. Should be a CSV file with a single column containing SMILES. Header should be 'smiles'. Required.
-* __--training_args__: Initialize the model arguments. Required.
-* __--num_labels__: Number of labels. Required.
+* __--task__: Multi-label classification task to choose. (tox21, sider) (required).
+* __--model_name__: Path of the fine-tuned model (required).
+* __--test_set__: Molecules to make predictions. Should be a CSV file with a single column containing SMILES. Header should be 'smiles' (required).
+* __--training_args__: Initialize the model arguments (required).
+* __--num_labels__: Number of labels (required).
 
 <br/>
 
@@ -189,10 +189,10 @@ To make predictions for either ESOL, FreeSolv, Lipophilicity, and PDBBind datase
 python3 regression_pred.py --task=esol --model_name=data/finetuned_models/esol_regression --tokenizer=data/RobertaFastTokenizer --test_set=data/finetuning_datasets/classification/esol/esol.csv --training_args=data/finetuned_models/esol_regression/training_args.bin 
 ```
 
-* __--task__: Binary classification task to choose. (esol, freesolv, lipo, pdbbind_full) Required.
-* __--model_name__: Path of the fine-tuned model. Required.
-* __--tokenizer__: Tokenizer selection. Required.
-* __--test_set__: Molecules to make predictions. Should be a CSV file with a single column. Header should be smiles. Required.
-* __--training_args__: Initialize the model arguments. Required. 
+* __--task__: Binary classification task to choose. (esol, freesolv, lipo, pdbbind_full) (required).
+* __--model_name__: Path of the fine-tuned model (required).
+* __--tokenizer__: Tokenizer selection (required).
+* __--test_set__: Molecules to make predictions. Should be a CSV file with a single column. Header should be smiles (required).
+* __--training_args__: Initialize the model arguments (required).
 
 
