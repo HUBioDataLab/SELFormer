@@ -1,0 +1,10 @@
+smiles,Compound ID,ESOL predicted log solubility in mols per litre,Minimum Degree,Molecular Weight,Number of H-Bond Donors,Number of Rings,Number of Rotatable Bonds,Polar Surface Area,measured log solubility in mols per litre
+OCC3OC(OCC2OC(OC(C#N)c1ccccc1)C(O)C(O)C2O)C(O)C(O)C3O ,Amigdalin,-0.974,1,457.4320000000001,7,3,7,202.32,-0.77
+Cc1occc1C(=O)Nc2ccccc2,Fenfuram,-2.885,1,201.225,1,2,2,42.24,-3.3
+CC(C)=CCCC(C)=CC(=O),citral,-2.579,1,152.237,0,0,4,17.07,-2.06
+c1ccc2c(c1)ccc3c2ccc4c5ccccc5ccc43,Picene,-6.617999999999999,2,278.354,0,5,0,0.0,-7.87
+c1ccsc1,Thiophene,-2.232,2,84.14299999999999,0,1,0,0.0,-1.33
+c2ccc1scnc1c2 ,benzothiazole,-2.733,2,135.191,0,2,0,12.89,-1.5
+Clc1cc(Cl)c(c(Cl)c1)c2c(Cl)cccc2Cl,"2,2,4,6,6'-PCB",-6.545,1,326.437,0,2,1,0.0,-7.32
+CC12CCC3C(CCc4cc(O)ccc34)C2CCC1O,Estradiol,-4.138,1,272.388,2,4,0,40.46,-5.03
+ClC4=C(Cl)C5(Cl)C3C1CC(C2OC12)C3C4(Cl)C5(Cl)Cl,Dieldrin,-4.533,1,380.913,0,5,0,12.53,-6.29

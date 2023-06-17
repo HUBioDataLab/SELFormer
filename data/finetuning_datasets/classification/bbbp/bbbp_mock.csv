@@ -1,0 +1,10 @@
+smiles,p_np
+[Cl].CC(C)NCC(O)COc1cccc2ccccc12,1
+C(=O)(OC(C)(C)C)CCCc1ccc(cc1)N(CCCl)CCCl,1
+c12c3c(N4CCN(C)CC4)c(F)cc1c(c(C(O)=O)cn2C(C)CO3)=O,1
+C1CCN(CC1)Cc1cccc(c1)OCCCNC(=O)C,1
+Cc1onc(c2ccccc2Cl)c1C(=O)N[C@H]3[C@H]4SC(C)(C)[C@@H](N4C3=O)C(O)=O,1
+CCN1CCN(C(=O)N[C@@H](C(=O)N[C@H]2[C@H]3SCC(=C(N3C2=O)C(O)=O)CSc4nnnn4C)c5ccc(O)cc5)C(=O)C1=O,1
+CN(C)[C@H]1[C@@H]2C[C@H]3C(=C(O)c4c(O)cccc4[C@@]3(C)O)C(=O)[C@]2(O)C(=O)\C(=C(/O)NCN5CCCC5)C1=O,1
+Cn1c2CCC(Cn3ccnc3C)C(=O)c2c4ccccc14,1
+COc1ccc(cc1)[C@@H]2Sc3ccccc3N(CCN(C)C)C(=O)[C@@H]2OC(C)=O,1

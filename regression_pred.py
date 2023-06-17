@@ -15,9 +15,9 @@ from prepare_finetuning_data import smiles_to_selfies
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--task", default="hiv", help="task selection.")
+parser.add_argument("--task", default="esol", help="task selection.")
 parser.add_argument("--tokenizer_name", default="data/RobertaFastTokenizer", metavar="/path/to/dataset/", help="Tokenizer selection.")
-parser.add_argument("--test_set", default='data/finetuning_datasets/regression/esol/test.csv', metavar="/path/to/dataset/", help="Test set for predictions.")
+parser.add_argument("--pred_set", default='data/finetuning_datasets/regression/esol/esol_mock.csv', metavar="/path/to/dataset/", help="Test set for predictions.")
 parser.add_argument("--training_args", default= "data/finetuned_models/esol_regression/training_args.bin", metavar="/path/to/dataset/", help="Trained model arguments.")
 parser.add_argument("--model_name", default='data/finetuned_models/esol_regression',  metavar="/path/to/dataset/", help="Path to the model.")
 args = parser.parse_args()
@@ -71,24 +71,22 @@ class SELFIESTransfomers_Dataset(Dataset):
         
         return item
     
-test_set = pd.read_csv(args.test_set)
-
-
-test_df_selfies = smiles_to_selfies(test_set)
+pred_set = pd.read_csv(args.pred_set)
+pred_df_selfies = smiles_to_selfies(pred_set)
 
 MAX_LEN = 128
 
-test_examples = (test_df_selfies.iloc[:, 0].astype(str).tolist())
-test_dataset = SELFIESTransfomers_Dataset(test_examples, tokenizer, MAX_LEN)
+pred_examples = (pred_df_selfies.iloc[:, 0].astype(str).tolist())
+pred_dataset = SELFIESTransfomers_Dataset(pred_examples, tokenizer, MAX_LEN)
 
 training_args = torch.load(args.training_args)
 
 trainer = Trainer(model=model, args=training_args)  # the instantiated 🤗 Transformers model to be trained  # training arguments, defined above  # training dataset  # evaluation dataset
 
-raw_pred, label_ids, metrics = trainer.predict(test_dataset)
+raw_pred, label_ids, metrics = trainer.predict(pred_dataset)
 y_pred = [i[0] for i in raw_pred]
 
-res = pd.concat([test_df_selfies, pd.DataFrame(y_pred, columns=["prediction"])], axis = 1)
+res = pd.concat([pred_df_selfies, pd.DataFrame(y_pred, columns=["prediction"])], axis = 1)
 
 if not os.path.exists("data/predictions"):
     os.makedirs("data/predictions")
