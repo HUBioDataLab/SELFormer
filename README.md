@@ -1,10 +1,5 @@
 # SELFormer: Molecular Representation Learning via SELFIES Language Models
 
-<p align="center">
-  <a href="https://doi.org/10.1088/2632-2153/acdb30"><img src="https://img.shields.io/badge/paper-report-red"/></a>
-  <a href="http://www.gnu.org/licenses/"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg"/></a> 
-</p>
-
 <!-- omit in toc -->
 
 [![publication](https://img.shields.io/badge/Article-%40MLST%20journal-d30000.svg)](https://doi.org/10.1088/2632-2153/acdb30) [![license](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/)
