@@ -18,8 +18,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--task", default="bbbp", help="task selection.")
 parser.add_argument("--tokenizer_name", default="data/RobertaFastTokenizer", metavar="/path/to/dataset/", help="Tokenizer selection.")
 parser.add_argument("--pred_set", default="data/finetuning_datasets/classification/bbbp/bbbp_mock.csv", metavar="/path/to/dataset/", help="Test set for predictions.")
-parser.add_argument("--training_args", default= "data/finetuned_models/modelO_bbbp_scaffold_optimized/training_args.bin", metavar="/path/to/dataset/", help="Trained model arguments.")
-parser.add_argument("--model_name", default="data/finetuned_models/modelO_bbbp_scaffold_optimized",  metavar="/path/to/dataset/", help="Path to the model.")
+parser.add_argument("--training_args", default= "data/finetuned_models/SELFormer_bbbp_scaffold_optimized/training_args.bin", metavar="/path/to/dataset/", help="Trained model arguments.")
+parser.add_argument("--model_name", default="data/finetuned_models/SELFormer_bbbp_scaffold_optimized",  metavar="/path/to/dataset/", help="Path to the model.")
 args = parser.parse_args()
 
 class SELFIESTransformers_For_Classification(BertPreTrainedModel):

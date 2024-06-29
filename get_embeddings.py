@@ -12,7 +12,7 @@ import torch
 
 df = pd.read_csv("./data/molecule_dataset_selfies.csv") # path of the selfies data
 
-model_name = "./data/pretrained_models/modelO" # path of the pre-trained model
+model_name = "./data/pretrained_models/SELFormer" # path of the pre-trained model
 config = RobertaConfig.from_pretrained(model_name)
 config.output_hidden_states = True
 tokenizer = RobertaTokenizer.from_pretrained("./data/RobertaFastTokenizer")

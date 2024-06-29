@@ -9,8 +9,8 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--task", default="sider", help="task selection.")
 parser.add_argument("--pred_set", default="data/finetuning_datasets/classification/sider/sider_mock.csv", metavar="/path/to/dataset/", help="Test set for predictions.")
-parser.add_argument("--training_args", default= "data/finetuned_models/modelO_sider_scaffold_optimized/training_args.bin", metavar="/path/to/dataset/", help="Trained model arguments.")
-parser.add_argument("--model_name", default="data/finetuned_models/modelO_sider_scaffold_optimized",  metavar="/path/to/dataset/", help="Path to the model.")
+parser.add_argument("--training_args", default= "data/finetuned_models/SELFormer_sider_scaffold_optimized/training_args.bin", metavar="/path/to/dataset/", help="Trained model arguments.")
+parser.add_argument("--model_name", default="data/finetuned_models/SELFormer_sider_scaffold_optimized",  metavar="/path/to/dataset/", help="Path to the model.")
 parser.add_argument("--num_labels", default=27, type=int, help="Number of labels.")
 args = parser.parse_args()
 
