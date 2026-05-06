@@ -26,9 +26,8 @@ Our pre-trained encoder models are implemented as "RobertaMaskedLM" and fine-tun
 We highly recommend the Conda platform for installing dependencies. Following the installation of Conda, please create and activate an environment with dependencies as defined below:
 
 ```
-conda create -n SELFormer_env
+conda env create --file data/requirements.yml
 conda activate SELFormer_env
-conda env update --file data/requirements.yml
 ```
 <br/>
 
@@ -228,4 +227,3 @@ This program is free software: you can redistribute it and/or modify it under th
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.
-

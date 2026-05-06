@@ -21,7 +21,12 @@ pred_df_selfies = smiles_to_selfies(pred_set)
 print("Loading model...")
 training_args = torch.load(args.training_args)
 num_labels = args.num_labels
-model = MultiLabelClassificationModel("roberta", args.model_name, num_labels=num_labels, use_cuda=True, args=args.training_args)
+model_args = {
+    "process_count": 1,
+    "use_multiprocessing": False,
+    "use_multiprocessing_for_evaluation": False,
+}
+model = MultiLabelClassificationModel("roberta", args.model_name, num_labels=num_labels, use_cuda=torch.cuda.is_available(), args=model_args)
 
 print("Predicting...")
 preds, _ = model.predict(pred_df_selfies["selfies"].tolist())

@@ -7,6 +7,7 @@ from simpletransformers.classification import MultiLabelClassificationModel
 
 import pandas as pd
 import numpy as np
+import torch
 
 import argparse
 
@@ -29,9 +30,13 @@ model_args = {
     "weight_decay": args.wd,
     "train_batch_size": args.batch_size,
     "output_dir": args.save_to,
+    "overwrite_output_dir": True,
+    "process_count": 1,
+    "use_multiprocessing": False,
+    "use_multiprocessing_for_evaluation": False,
 }
 
-model = MultiLabelClassificationModel("roberta", args.model, num_labels=num_labels, use_cuda=True, args=model_args)
+model = MultiLabelClassificationModel("roberta", args.model, num_labels=num_labels, use_cuda=torch.cuda.is_available(), args=model_args)
 
 from prepare_finetuning_data import train_val_test_split_multilabel
 

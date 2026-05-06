@@ -1,17 +1,21 @@
 name: SELFormer_env
 channels:
-  - anaconda
-  - defaults
+  - pytorch
   - conda-forge
+  - nodefaults
 dependencies:
+  - python=3.10
   - pytorch=1.13.1
   - transformers=4.26.1
   - pyyaml=6.0
   - yaml=0.2.5
   - scikit-learn=1.2.1
   - datasets=2.9.0
+  - pyarrow=14.0.2
   - chemprop=1.5.2
+  - seqeval=1.2.2
   - tokenizers=0.13.2
+  - setuptools<81
   - pip=22.3.1
   - pip:
     - simpletransformers==0.63.9
